@@ -4,8 +4,13 @@ export const metadata = {
   title: 'Health Tracker',
   description: 'AI-alapú Táplálkozási és Egészségügyi PWA',
   manifest: '/manifest.json',
+};
+
+export const viewport = {
   themeColor: '#0f172a',
-  viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
 };
 
 export default function RootLayout({ children }) {
