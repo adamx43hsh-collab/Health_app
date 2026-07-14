@@ -1,15 +1,28 @@
 // Állapot (State)
 let foodDatabase = [];
 let logs = JSON.parse(localStorage.getItem('health_logs')) || [];
+let scoreChartInstance = null;
 
 // Segéd: Adatbázis betöltése
 async function fetchDatabase() {
     try {
         const res = await fetch('data/food_database.json');
         foodDatabase = await res.json();
+        populateDatalist();
     } catch (e) {
         console.error('Nem sikerült betölteni az adatbázist', e);
     }
+}
+
+// Autocomplete feltöltése
+function populateDatalist() {
+    const datalist = document.getElementById('food-list');
+    datalist.innerHTML = '';
+    foodDatabase.forEach(item => {
+        const option = document.createElement('option');
+        option.value = item.name;
+        datalist.appendChild(option);
+    });
 }
 
 // Fülek közötti navigáció
@@ -26,37 +39,42 @@ document.querySelectorAll('.nav-item').forEach(item => {
         
         const targetTab = document.getElementById(`tab-${targetId}`);
         targetTab.style.display = targetId === 'coach' ? 'flex' : 'block';
-        // Erőltetett reflow az animáció újraindításához
+        
+        // Reflow az animációhoz
         void targetTab.offsetWidth;
         targetTab.classList.add('animate-fade-in');
         
+        // Tab-specifikus kalkulációk
         if (targetId === 'dashboard') calculateScore();
         if (targetId === 'diversity') calculateDiversity();
+        if (targetId === 'stats') renderStats();
     });
 });
 
 // Étel naplózása
 document.getElementById('log-form').addEventListener('submit', (e) => {
     e.preventDefault();
-    const foodName = document.getElementById('foodName').value;
+    const foodNameInput = document.getElementById('foodName').value;
     const amount = parseFloat(document.getElementById('amount').value);
     
     // Keresés az adatbázisban
-    const foodItem = foodDatabase.find(f => f.food.toLowerCase().includes(foodName.toLowerCase()));
+    const foodItem = foodDatabase.find(f => f.name.toLowerCase() === foodNameInput.toLowerCase()) || 
+                     foodDatabase.find(f => f.name.toLowerCase().includes(foodNameInput.toLowerCase()));
     
     const newLog = {
         id: Date.now().toString(),
         timestamp: new Date().toISOString(),
-        foodName: foodItem ? foodItem.food : foodName,
+        foodName: foodItem ? foodItem.name : foodNameInput,
         amount: amount,
         category: foodItem ? foodItem.category : 'Egyéb',
-        score: foodItem ? foodItem.score : 0,
+        weight: foodItem ? foodItem.weight : 0,
         synced: false
     };
     
     logs.push(newLog);
     saveLogs();
     renderLogs();
+    calculateScore();
     syncWithServer();
     
     document.getElementById('foodName').value = '';
@@ -78,12 +96,317 @@ function renderLogs() {
     
     todayLogs.forEach(log => {
         const li = document.createElement('li');
-        li.style.padding = '10px';
-        li.style.background = 'rgba(255,255,255,0.05)';
+        li.style.padding = '12px';
+        li.style.background = 'rgba(255,255,255,0.03)';
         li.style.marginBottom = '8px';
         li.style.borderRadius = '8px';
-        li.innerHTML = `<strong>${log.foodName}</strong> - ${log.amount} adag <span style="float:right;color:var(--accent-primary)">${log.score > 0 ? '+'+log.score : log.score} pont</span>`;
+        li.style.display = 'flex';
+        li.style.justifyContent = 'space-between';
+        li.style.alignItems = 'center';
+        
+        const scoreVal = log.weight;
+        const color = scoreVal > 0 ? 'var(--accent-primary)' : (scoreVal < 0 ? 'var(--danger)' : 'var(--text-secondary)');
+        const scoreText = scoreVal > 0 ? `+${scoreVal.toFixed(2)} súly` : `${scoreVal.toFixed(2)} súly`;
+
+        li.innerHTML = `
+            <div>
+                <strong>${log.foodName}</strong> <br>
+                <small style="color:var(--text-secondary)">${log.category} | ${log.amount} adag</small>
+            </div>
+            <span style="color:${color}; font-weight:bold;">${scoreText}</span>
+        `;
         list.appendChild(li);
+    });
+}
+
+// WDMS pont kiszámítása egy időszakra
+function getScoreForPeriod(periodLogs) {
+    if (periodLogs.length === 0) return 0;
+    
+    let totalWeightScore = 0;
+    let totalPortions = 0;
+    
+    periodLogs.forEach(log => {
+        totalWeightScore += (log.amount * log.weight);
+        totalPortions += log.amount;
+    });
+    
+    if (totalPortions === 0) return 0;
+    
+    // S = 100 * sum(amount_i * W_i) / T
+    const S = 100 * (totalWeightScore / totalPortions);
+    
+    // P = 100 / (1 + e^(-0.05 * S))
+    const P = 100 / (1 + Math.exp(-0.05 * S));
+    
+    return Math.round(P);
+}
+
+// Időszaki pontszámok és Változási Index kiszámítása
+function calculateScore() {
+    const now = new Date();
+    
+    // Szűrések különböző időszakokra
+    const getLogsForDaysAgo = (days) => {
+        const limitDate = new Date();
+        limitDate.setDate(limitDate.getDate() - days);
+        return logs.filter(l => new Date(l.timestamp) >= limitDate);
+    };
+
+    const todayStr = now.toDateString();
+    const todayLogs = logs.filter(l => new Date(l.timestamp).toDateString() === todayStr);
+    
+    const daily = getScoreForPeriod(todayLogs);
+    const weekly = getScoreForPeriod(getLogsForDaysAgo(7));
+    const monthly = getScoreForPeriod(getLogsForDaysAgo(30));
+    const yearly = getScoreForPeriod(getLogsForDaysAgo(365));
+
+    document.getElementById('score-daily').innerText = daily;
+    document.getElementById('score-weekly').innerText = weekly;
+    document.getElementById('score-monthly').innerText = monthly;
+    document.getElementById('score-yearly').innerText = yearly;
+
+    // Változási Index (Kettős mozgóátlag + szórás)
+    // 30 napi bontásban számoljuk ki a napi pontszámokat
+    const dailyScores = [];
+    for (let i = 29; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        const dStr = d.toDateString();
+        const dayLogs = logs.filter(l => new Date(l.timestamp).toDateString() === dStr);
+        dailyScores.push(getScoreForPeriod(dayLogs));
+    }
+
+    // SMA30 (30 nap átlaga)
+    const sma30 = dailyScores.reduce((a, b) => a + b, 0) / 30;
+
+    // SMA7 (utolsó 7 nap átlaga)
+    const last7Scores = dailyScores.slice(-7);
+    const sma7 = last7Scores.reduce((a, b) => a + b, 0) / 7;
+
+    // Delta
+    const delta = sma7 - sma30;
+
+    // Szórás (utolsó 7 nap)
+    const mean7 = sma7;
+    const variance7 = last7Scores.reduce((a, b) => a + Math.pow(b - mean7, 2), 0) / 7;
+    const sigma = Math.sqrt(variance7);
+
+    // V = 50 + (2.5 * delta) - (0.5 * sigma)
+    let V = 50 + (2.5 * delta) - (0.5 * sigma);
+    V = Math.max(0, Math.min(100, Math.round(V)));
+
+    document.getElementById('dashboard-score').innerText = V;
+    document.getElementById('dashboard-sigma').innerText = sigma.toFixed(1);
+    document.getElementById('dashboard-delta').innerText = delta > 0 ? `+${delta.toFixed(1)}` : delta.toFixed(1);
+    
+    let trend = 'Stabil ➡️';
+    if (delta > 2) trend = 'Javuló ↗️';
+    else if (delta < -2) trend = 'Romló ↘️';
+    document.getElementById('dashboard-trend').innerText = trend;
+}
+
+// Diverzitás
+function calculateDiversity() {
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    const weeklyLogs = logs.filter(l => new Date(l.timestamp) >= oneWeekAgo);
+
+    // 1. MDD-W (Élelmiszercsoportok)
+    // Térkép a kategóriákról
+    const categoryMapping = {
+        'Zöld leveles zöldségek': 'leafy',
+        'Egyéb zöldségek': 'veg',
+        'Bogyós gyümölcsök': 'fruit',
+        'Egyéb gyümölcsök': 'fruit',
+        'Hüvelyesek és Szója': 'pulses',
+        'Diófélék és magvak': 'nuts',
+        'Halak és Húsok': 'meat',
+        'Tejtermékek': 'dairy',
+        'Gabonafélék': 'grains',
+        'Olajok és Zsírok': 'oils'
+    };
+
+    const activeGroups = new Set();
+    weeklyLogs.forEach(log => {
+        const mapped = categoryMapping[log.category];
+        if (mapped) activeGroups.add(mapped);
+        
+        // Külön tojás detektálás (MDD-W csoport)
+        if (log.foodName.toLowerCase().includes('tojás')) {
+            activeGroups.add('eggs');
+        }
+    });
+
+    document.getElementById('div-mddw').innerText = activeGroups.size;
+
+    // 2. Heti 30-as szabály (Növényi változatosság)
+    const plantCategories = [
+        'Zöld leveles zöldségek', 'Egyéb zöldségek', 
+        'Bogyós gyümölcsök', 'Egyéb gyümölcsök', 
+        'Hüvelyesek és Szója', 'Diófélék és magvak', 
+        'Gabonafélék', 'Fűszerek és Egyéb'
+    ];
+    const plantLogs = weeklyLogs.filter(l => plantCategories.includes(l.category));
+    const uniquePlants = new Set(plantLogs.map(l => l.foodName.toLowerCase()));
+
+    document.getElementById('div-plants').innerText = `${uniquePlants.size} / 30`;
+
+    // 3. Korlátozandó élelmiszerek vizsgálata (Szigorú maximumok)
+    const warningsDiv = document.getElementById('div-warnings');
+    warningsDiv.innerHTML = '';
+
+    const counts = {
+        redMeat: 0,
+        butter: 0,
+        cheese: 0,
+        fastFood: 0,
+        sweets: 0
+    };
+
+    weeklyLogs.forEach(log => {
+        const name = log.foodName.toLowerCase();
+        const cat = log.category;
+
+        // Vörös húsok
+        if (name.includes('marha') || name.includes('sertés') || name.includes('kolbász') || name.includes('szalámi') || name.includes('virsli') || name.includes('sonka') || name.includes('szalonna')) {
+            counts.redMeat += log.amount;
+        }
+        // Vaj / Margarin
+        if (name.includes('vaj') || name.includes('margarin')) {
+            counts.butter += log.amount;
+        }
+        // Sajt
+        if (name.includes('sajt') && cat === 'Tejtermékek') {
+            counts.cheese += log.amount;
+        }
+        // Gyorsétel
+        if (cat === 'Bolti Készételek és Alternatívák' || name.includes('rántott') || name.includes('sült burgonya') || name.includes('hamburger') || name.includes('pizza')) {
+            counts.fastFood += log.amount;
+        }
+        // Édesség
+        if (cat === 'Édességek és Nassok' || name.includes('cukor') || name.includes('csokoládé') || name.includes('keksz') || name.includes('torta') || name.includes('fánk') || name.includes('croissant')) {
+            counts.sweets += log.amount;
+        }
+    });
+
+    const addWarning = (text, current, limit, unit) => {
+        const isExceeded = current > limit;
+        const color = isExceeded ? 'var(--danger)' : 'var(--accent-primary)';
+        const card = document.createElement('div');
+        card.style.padding = '10px';
+        card.style.background = 'rgba(255,255,255,0.02)';
+        card.style.marginBottom = '8px';
+        card.style.borderRadius = '8px';
+        card.style.borderLeft = `4px solid ${color}`;
+        card.innerHTML = `<strong>${text}</strong>: <span style="color:${color}">${current.toFixed(1)}</span> / ${limit} ${unit} ${isExceeded ? '⚠️ (Túllépve!)' : '✅'}`;
+        warningsDiv.appendChild(card);
+    };
+
+    addWarning('Vörös húsok', counts.redMeat, 4, 'adag/hét');
+    addWarning('Vaj és Margarin (napi átlag)', counts.butter / 7, 1, 'adag/nap');
+    addWarning('Zsíros sajt', counts.cheese, 1, 'adag/hét');
+    addWarning('Bő zsírban sült / Gyorsétel', counts.fastFood, 1, 'alkalom/hét');
+    addWarning('Édesség / Hozzáadott cukor', counts.sweets, 5, 'adag/hét');
+}
+
+// Statisztika fül kirajzolása
+function renderStats() {
+    // 1. Chart.js Heti trend kirajzolás
+    const ctx = document.getElementById('scoreChart').getContext('2d');
+    
+    // Utolsó 7 nap napi pontszámai
+    const labels = [];
+    const chartData = [];
+    for (let i = 6; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        labels.push(d.toLocaleDateString('hu-HU', { weekday: 'short', day: 'numeric' }));
+        
+        const dStr = d.toDateString();
+        const dayLogs = logs.filter(l => new Date(l.timestamp).toDateString() === dStr);
+        chartData.push(getScoreForPeriod(dayLogs));
+    }
+
+    if (scoreChartInstance) {
+        scoreChartInstance.destroy();
+    }
+
+    scoreChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Napi Egészség Pont',
+                data: chartData,
+                borderColor: '#10b981',
+                backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                tension: 0.3,
+                fill: true,
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: { min: 0, max: 100, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } },
+                x: { grid: { display: false }, ticks: { color: '#94a3b8' } }
+            },
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
+
+    // 2. Gyakori ételek
+    const freqMap = {};
+    logs.forEach(log => {
+        freqMap[log.foodName] = (freqMap[log.foodName] || 0) + log.amount;
+    });
+
+    const sortedFreq = Object.entries(freqMap).sort((a, b) => b[1] - a[1]).slice(0, 5);
+    const freqList = document.getElementById('stats-freq-list');
+    freqList.innerHTML = '';
+    
+    if (sortedFreq.length === 0) {
+        freqList.innerHTML = '<p>Nincs még elegendő adat.</p>';
+    }
+
+    sortedFreq.forEach(([name, count]) => {
+        const li = document.createElement('li');
+        li.style.padding = '8px 0';
+        li.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
+        li.innerHTML = `<strong>${name}</strong>: ${count} alkalommal`;
+        freqList.appendChild(li);
+    });
+
+    // 3. Korábbi napok ételei (melyik nap mit ettem)
+    const historyList = document.getElementById('stats-history-list');
+    historyList.innerHTML = '';
+    
+    // Csoportosítás napok szerint
+    const grouped = {};
+    logs.forEach(log => {
+        const date = new Date(log.timestamp).toLocaleDateString('hu-HU', { year: 'numeric', month: 'long', day: 'numeric' });
+        if (!grouped[date]) grouped[date] = [];
+        grouped[date].push(`${log.foodName} (${log.amount} adag)`);
+    });
+
+    const sortedDays = Object.entries(grouped).sort((a, b) => new Date(b[0]) - new Date(a[0])).slice(0, 7);
+
+    if (sortedDays.length === 0) {
+        historyList.innerHTML = '<p>Nincs még bejegyzés.</p>';
+    }
+
+    sortedDays.forEach(([date, foods]) => {
+        const li = document.createElement('li');
+        li.style.marginBottom = '12px';
+        li.style.padding = '10px';
+        li.style.background = 'rgba(255,255,255,0.02)';
+        li.style.borderRadius = '6px';
+        li.innerHTML = `<span style="font-size:0.85rem; color:var(--accent-secondary); font-weight:bold;">${date}</span><br><span style="font-size:0.9rem;">${foods.join(', ')}</span>`;
+        historyList.appendChild(li);
     });
 }
 
@@ -108,66 +431,6 @@ async function syncWithServer() {
     }
 }
 
-// Pontozás (Változási Index - Kettős Mozgóátlag)
-function calculateScore() {
-    if (logs.length === 0) return;
-    
-    // 1. Napi összpontszámok számítása
-    const dailyScores = {};
-    logs.forEach(log => {
-        const date = new Date(log.timestamp).toDateString();
-        if (!dailyScores[date]) dailyScores[date] = 0;
-        dailyScores[date] += (log.score * log.amount);
-    });
-    
-    const scoresArray = Object.values(dailyScores);
-    
-    // Szigma (Stabilitás) - szórás
-    let sigma = 0;
-    if (scoresArray.length > 1) {
-        const mean = scoresArray.reduce((a, b) => a + b) / scoresArray.length;
-        const variance = scoresArray.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / scoresArray.length;
-        sigma = Math.sqrt(variance).toFixed(1);
-    }
-    
-    const latestScore = scoresArray[scoresArray.length - 1];
-    
-    // Szigmoid normalizáció 0-100 skálára
-    const normalizedScore = Math.round(100 / (1 + Math.exp(-latestScore / 10)));
-    
-    document.getElementById('dashboard-score').innerText = normalizedScore;
-    document.getElementById('dashboard-sigma').innerText = sigma;
-    
-    if (scoresArray.length >= 2) {
-        const prev = scoresArray[scoresArray.length - 2];
-        const delta = latestScore - prev;
-        document.getElementById('dashboard-delta').innerText = delta > 0 ? `+${delta.toFixed(1)}` : delta.toFixed(1);
-        document.getElementById('dashboard-trend').innerText = delta > 0 ? 'Javuló ↗' : 'Romló ↘';
-    } else {
-        document.getElementById('dashboard-delta').innerText = '-';
-        document.getElementById('dashboard-trend').innerText = '-';
-    }
-}
-
-// Diverzitás számítás
-function calculateDiversity() {
-    const oneWeekAgo = new Date();
-    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-    
-    const weeklyLogs = logs.filter(l => new Date(l.timestamp) > oneWeekAgo);
-    
-    // MDD-W kategóriák (egyedi)
-    const uniqueCategories = new Set(weeklyLogs.map(l => l.category));
-    document.getElementById('div-mddw').innerText = uniqueCategories.size;
-    
-    // Növényi ételek (Zöldség, Gyümölcs, Diófélék, Hüvelyesek)
-    const plantCategories = ['Zöldség', 'Gyümölcs', 'Diófélék', 'Hüvelyesek', 'Teljes kiőrlésű gabona'];
-    const plantLogs = weeklyLogs.filter(l => plantCategories.includes(l.category));
-    const uniquePlants = new Set(plantLogs.map(l => l.foodName));
-    
-    document.getElementById('div-plants').innerText = `${uniquePlants.size} / 30`;
-}
-
 // AI Coach Chat
 const coachForm = document.getElementById('coach-form');
 const coachInput = document.getElementById('coach-input');
@@ -178,14 +441,16 @@ coachForm.addEventListener('submit', async (e) => {
     const msg = coachInput.value;
     coachInput.value = '';
     
-    // Felhasználó üzenete
     appendMessage(msg, 'user');
     
-    // Context összeállítása
+    // Aktuális állapot összegyűjtése az AI-nak
     const contextData = {
-        score: document.getElementById('dashboard-score').innerText,
-        trend: document.getElementById('dashboard-trend').innerText,
-        plants: document.getElementById('div-plants').innerText,
+        napiPontszam: document.getElementById('score-daily').innerText,
+        hetiPontszam: document.getElementById('score-weekly').innerText,
+        haviPontszam: document.getElementById('score-monthly').innerText,
+        valtozasiIndex: document.getElementById('dashboard-score').innerText,
+        hetiNovenyiDiverzitas: document.getElementById('div-plants').innerText,
+        mddwCsoportSzam: document.getElementById('div-mddw').innerText
     };
     
     try {
@@ -236,3 +501,12 @@ fetchDatabase().then(() => {
     calculateDiversity();
     syncWithServer();
 });
+
+// Service Worker regisztráció PWA-hoz
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+            .then(reg => console.log('Service Worker regisztrálva', reg))
+            .catch(err => console.error('Service Worker hiba', err));
+    });
+}
