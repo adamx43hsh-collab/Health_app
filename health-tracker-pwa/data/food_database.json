@@ -1,0 +1,1017 @@
+[
+  {
+    "Category":"Zöld leveles zöldségek",
+    "Name":"Spenót",
+    "Weight_Pos":0.65,
+    "Weight_Neg":2.15,
+    "Notes":"Magas folsav és lutein tartalom"
+  },
+  {
+    "Category":"Zöld leveles zöldségek",
+    "Name":"Fodros kel (Kale)",
+    "Weight_Pos":0.6,
+    "Weight_Neg":2.55,
+    "Notes":"Rendkívül erős antioxidáns és K-vitamin forrás"
+  },
+  {
+    "Category":"Zöld leveles zöldségek",
+    "Name":"Sóska",
+    "Weight_Pos":0.65,
+    "Weight_Neg":2.15,
+    "Notes":"Kiemelkedő mikrotápanyagok"
+  },
+  {
+    "Category":"Zöld leveles zöldségek",
+    "Name":"Rukkola",
+    "Weight_Pos":0.68,
+    "Weight_Neg":1.93,
+    "Notes":"Nitrátokban gazdag, javítja a vérkeringést"
+  },
+  {
+    "Category":"Zöld leveles zöldségek",
+    "Name":"Mángold",
+    "Weight_Pos":0.66,
+    "Weight_Neg":2.08,
+    "Notes":"Gyulladáscsökkentő sziringasav tartalom"
+  },
+  {
+    "Category":"Zöld leveles zöldségek",
+    "Name":"Madársaláta",
+    "Weight_Pos":0.7,
+    "Weight_Neg":1.78,
+    "Notes":"Jó B-vitamin és C-vitamin forrás"
+  },
+  {
+    "Category":"Zöld leveles zöldségek",
+    "Name":"Jégsaláta",
+    "Weight_Pos":0.85,
+    "Weight_Neg":0.81,
+    "Notes":"Magas víztartalom, alacsonyabb hatóanyagsűrűség"
+  },
+  {
+    "Category":"Zöld leveles zöldségek",
+    "Name":"Kínai kel",
+    "Weight_Pos":0.75,
+    "Weight_Neg":1.44,
+    "Notes":"Könnyen emészthető, jó kalciumforrás"
+  },
+  {
+    "Category":"Egyéb zöldségek",
+    "Name":"Brokkoli",
+    "Weight_Pos":0.7,
+    "Weight_Neg":1.78,
+    "Notes":"Szulforafán tartalom, erős neuroprotektív hatás"
+  },
+  {
+    "Category":"Egyéb zöldségek",
+    "Name":"Karfiol",
+    "Weight_Pos":0.78,
+    "Weight_Neg":1.24,
+    "Notes":"Kolinban gazdag, támogatja az agyi fejlődést"
+  },
+  {
+    "Category":"Egyéb zöldségek",
+    "Name":"Kelbimbó",
+    "Weight_Pos":0.75,
+    "Weight_Neg":1.44,
+    "Notes":"Glükozinolátok, sejtregeneráló hatás"
+  },
+  {
+    "Category":"Egyéb zöldségek",
+    "Name":"Paradicsom (főtt\/püré)",
+    "Weight_Pos":0.8,
+    "Weight_Neg":1.12,
+    "Notes":"Koncentrált likopin, védi az érfalakat"
+  },
+  {
+    "Category":"Egyéb zöldségek",
+    "Name":"Paradicsom (nyers)",
+    "Weight_Pos":0.85,
+    "Weight_Neg":0.81,
+    "Notes":"Frissítő, alacsony kalória, jó káliumforrás"
+  },
+  {
+    "Category":"Egyéb zöldségek",
+    "Name":"Sárgarépa",
+    "Weight_Pos":0.85,
+    "Weight_Neg":0.81,
+    "Notes":"Béta-karotin (A-vitamin előanyag)"
+  },
+  {
+    "Category":"Egyéb zöldségek",
+    "Name":"Cékla",
+    "Weight_Pos":0.75,
+    "Weight_Neg":1.44,
+    "Notes":"Vérnyomáscsökkentő, javítja az agyi vérellátást"
+  },
+  {
+    "Category":"Egyéb zöldségek",
+    "Name":"Édesburgonya",
+    "Weight_Pos":0.82,
+    "Weight_Neg":0.99,
+    "Notes":"Alacsonyabb GI mint a sima krumpli, sok A-vitamin"
+  },
+  {
+    "Category":"Egyéb zöldségek",
+    "Name":"Burgonya (főtt\/sült)",
+    "Weight_Pos":1.05,
+    "Weight_Neg":-0.24,
+    "Notes":"Magas keményítőtartalom, gyors vércukor-reakció"
+  },
+  {
+    "Category":"Egyéb zöldségek",
+    "Name":"Hasábburgonya (olajban sült)",
+    "Weight_Pos":1.6,
+    "Weight_Neg":-2.35,
+    "Notes":"Transzzsírok, akrilamid (idegméreg)"
+  },
+  {
+    "Category":"Egyéb zöldségek",
+    "Name":"Vöröshagyma",
+    "Weight_Pos":0.8,
+    "Weight_Neg":1.12,
+    "Notes":"Kvercetin, erős érrendszer-védő flavonoid"
+  },
+  {
+    "Category":"Egyéb zöldségek",
+    "Name":"Fokhagyma",
+    "Weight_Pos":0.72,
+    "Weight_Neg":1.64,
+    "Notes":"Allicin tartalom, természetes vérnyomás-szabályozó"
+  },
+  {
+    "Category":"Egyéb zöldségek",
+    "Name":"Gomba (Csiperke, Laskagomba)",
+    "Weight_Pos":0.82,
+    "Weight_Neg":0.99,
+    "Notes":"Ergotionein aminosav, védi az idegsejteket"
+  },
+  {
+    "Category":"Egyéb zöldségek",
+    "Name":"Kígyóuborka",
+    "Weight_Pos":0.95,
+    "Weight_Neg":0.26,
+    "Notes":"Főleg víz (95%), hidratáló de semleges"
+  },
+  {
+    "Category":"Egyéb zöldségek",
+    "Name":"Cukkini",
+    "Weight_Pos":0.9,
+    "Weight_Neg":0.53,
+    "Notes":"Könnyű emészthetőség, magas rosttartalom"
+  },
+  {
+    "Category":"Egyéb zöldségek",
+    "Name":"Padlizsán",
+    "Weight_Pos":0.88,
+    "Weight_Neg":0.64,
+    "Notes":"A héja (naszunin) védi az agysejt-membránokat"
+  },
+  {
+    "Category":"Bogyós gyümölcsök",
+    "Name":"Kék áfonya",
+    "Weight_Pos":0.65,
+    "Weight_Neg":2.15,
+    "Notes":"A legerősebb agyvédő gyümölcs, antocianin-bomba"
+  },
+  {
+    "Category":"Bogyós gyümölcsök",
+    "Name":"Fekete szeder",
+    "Weight_Pos":0.7,
+    "Weight_Neg":1.78,
+    "Notes":"Magas rost és ellagsav tartalom"
+  },
+  {
+    "Category":"Bogyós gyümölcsök",
+    "Name":"Málna",
+    "Weight_Pos":0.72,
+    "Weight_Neg":1.64,
+    "Notes":"Kiemelkedő gyulladáscsökkentő, jó glikémiás profil"
+  },
+  {
+    "Category":"Bogyós gyümölcsök",
+    "Name":"Eper",
+    "Weight_Pos":0.78,
+    "Weight_Neg":1.24,
+    "Notes":"Jó C-vitamin forrás, de kevesebb polifenol"
+  },
+  {
+    "Category":"Bogyós gyümölcsök",
+    "Name":"Fekete ribizli",
+    "Weight_Pos":0.68,
+    "Weight_Neg":1.93,
+    "Notes":"Rendkívül magas C-vitamin és antocianin"
+  },
+  {
+    "Category":"Bogyós gyümölcsök",
+    "Name":"Cseresznye\/Meggy",
+    "Weight_Pos":0.75,
+    "Weight_Neg":1.44,
+    "Notes":"Melatonin tartalom, segíti az alvás\/ébrenlét ciklust"
+  },
+  {
+    "Category":"Egyéb gyümölcsök",
+    "Name":"Alma",
+    "Weight_Pos":0.88,
+    "Weight_Neg":0.64,
+    "Notes":"Pektin (bélflóra), kvercetin (héjában)"
+  },
+  {
+    "Category":"Egyéb gyümölcsök",
+    "Name":"Körte",
+    "Weight_Pos":0.9,
+    "Weight_Neg":0.53,
+    "Notes":"Jó rostforrás, segíti az emésztést"
+  },
+  {
+    "Category":"Egyéb gyümölcsök",
+    "Name":"Narancs\/Grépfrút",
+    "Weight_Pos":0.92,
+    "Weight_Neg":0.42,
+    "Notes":"C-vitamin és heszperidin (keringésjavító)"
+  },
+  {
+    "Category":"Egyéb gyümölcsök",
+    "Name":"Citrom (leve)",
+    "Weight_Pos":0.9,
+    "Weight_Neg":0.53,
+    "Notes":"Lúgosító hatású metabolitok, antioxidáns"
+  },
+  {
+    "Category":"Egyéb gyümölcsök",
+    "Name":"Banán (érett)",
+    "Weight_Pos":0.98,
+    "Weight_Neg":0.1,
+    "Notes":"Magas kálium, de relatív magas gyors szénhidrát"
+  },
+  {
+    "Category":"Egyéb gyümölcsök",
+    "Name":"Avokádó",
+    "Weight_Pos":0.75,
+    "Weight_Neg":1.44,
+    "Notes":"Egészséges egyszeresen telítetlen zsírok (olajsav)"
+  },
+  {
+    "Category":"Egyéb gyümölcsök",
+    "Name":"Szőlő (vörös)",
+    "Weight_Pos":0.85,
+    "Weight_Neg":0.81,
+    "Notes":"Rezveratrol tartalom, érrendszer-védő"
+  },
+  {
+    "Category":"Egyéb gyümölcsök",
+    "Name":"Görögdinnye",
+    "Weight_Pos":0.95,
+    "Weight_Neg":0.26,
+    "Notes":"Lykopin és citrullin, jó hidratáló"
+  },
+  {
+    "Category":"Egyéb gyümölcsök",
+    "Name":"Sárgabarack\/Őszibarack",
+    "Weight_Pos":0.9,
+    "Weight_Neg":0.53,
+    "Notes":"Béta-karotin, rostok"
+  },
+  {
+    "Category":"Egyéb gyümölcsök",
+    "Name":"Datolya \/ Aszalt füge",
+    "Weight_Pos":1.15,
+    "Weight_Neg":-0.7,
+    "Notes":"Nagyon magas koncentrált cukortartalom"
+  },
+  {
+    "Category":"Diófélék és magvak",
+    "Name":"Dió",
+    "Weight_Pos":0.72,
+    "Weight_Neg":1.64,
+    "Notes":"Kiemelkedő növényi Omega-3 (ALA), agyi struktúra építő"
+  },
+  {
+    "Category":"Diófélék és magvak",
+    "Name":"Mandula",
+    "Weight_Pos":0.8,
+    "Weight_Neg":1.12,
+    "Notes":"E-vitaminban gazdag, védi a sejtmembránokat"
+  },
+  {
+    "Category":"Diófélék és magvak",
+    "Name":"Tökmag",
+    "Weight_Pos":0.82,
+    "Weight_Neg":0.99,
+    "Notes":"Kiváló cink és magnézium forrás"
+  },
+  {
+    "Category":"Diófélék és magvak",
+    "Name":"Lenmag (őrölt)",
+    "Weight_Pos":0.75,
+    "Weight_Neg":1.44,
+    "Notes":"Lignánok és Omega-3, hormonháztartás kiegyensúlyozó"
+  },
+  {
+    "Category":"Diófélék és magvak",
+    "Name":"Chia mag",
+    "Weight_Pos":0.75,
+    "Weight_Neg":1.44,
+    "Notes":"Magas rost és Omega-3, lassan felszívódó"
+  },
+  {
+    "Category":"Diófélék és magvak",
+    "Name":"Kesudió",
+    "Weight_Pos":0.85,
+    "Weight_Neg":0.81,
+    "Notes":"Magas vas és magnézium, de picit több telített zsír"
+  },
+  {
+    "Category":"Diófélék és magvak",
+    "Name":"Mogyoró (török)",
+    "Weight_Pos":0.82,
+    "Weight_Neg":0.99,
+    "Notes":"E-vitamin és egyszeresen telítetlen zsírok"
+  },
+  {
+    "Category":"Diófélék és magvak",
+    "Name":"Földimogyoró (pörkölt, sós)",
+    "Weight_Pos":1.05,
+    "Weight_Neg":-0.24,
+    "Notes":"Több Omega-6, só miatt vérnyomásnövelő lehet"
+  },
+  {
+    "Category":"Gabonafélék",
+    "Name":"Zabpehely",
+    "Weight_Pos":0.8,
+    "Weight_Neg":1.12,
+    "Notes":"Béta-glükán, koleszterinszint és vércukor stabilizáló"
+  },
+  {
+    "Category":"Gabonafélék",
+    "Name":"Quinoa",
+    "Weight_Pos":0.82,
+    "Weight_Neg":0.99,
+    "Notes":"Teljes értékű növényi fehérje, gluténmentes"
+  },
+  {
+    "Category":"Gabonafélék",
+    "Name":"Hajdina",
+    "Weight_Pos":0.85,
+    "Weight_Neg":0.81,
+    "Notes":"Rutin tartalom, érvédő hatású"
+  },
+  {
+    "Category":"Gabonafélék",
+    "Name":"Barna rizs \/ Basmati rizs",
+    "Weight_Pos":0.88,
+    "Weight_Neg":0.64,
+    "Notes":"Lassú felszívódás, alacsonyabb glikémiás index"
+  },
+  {
+    "Category":"Gabonafélék",
+    "Name":"Fehér rizs (Jázmin stb.)",
+    "Weight_Pos":1.25,
+    "Weight_Neg":-1.12,
+    "Notes":"Finomított, rosthiányos, vércukor-tüskét okoz"
+  },
+  {
+    "Category":"Gabonafélék",
+    "Name":"Bulgur \/ Köles",
+    "Weight_Pos":0.85,
+    "Weight_Neg":0.81,
+    "Notes":"Kiváló rost és B-vitamin profil"
+  },
+  {
+    "Category":"Gabonafélék",
+    "Name":"Teljes kiőrlésű kenyér (100%)",
+    "Weight_Pos":0.85,
+    "Weight_Neg":0.81,
+    "Notes":"Komplex szénhidrátok, lassan emeli a vércukrot"
+  },
+  {
+    "Category":"Gabonafélék",
+    "Name":"Fehér kenyér \/ Kifli \/ Zsemle",
+    "Weight_Pos":1.45,
+    "Weight_Neg":-1.86,
+    "Notes":"Magas glikémiás index, inzulinrezisztencia kockázat"
+  },
+  {
+    "Category":"Gabonafélék",
+    "Name":"Durumtészta",
+    "Weight_Pos":1.1,
+    "Weight_Neg":-0.48,
+    "Notes":"Jobb mint a sima tojásos tészta, de még mindig sűrű szénhidrát"
+  },
+  {
+    "Category":"Gabonafélék",
+    "Name":"Teljes kiőrlésű tészta",
+    "Weight_Pos":0.9,
+    "Weight_Neg":0.53,
+    "Notes":"Rostdúsabb, jobb emésztési profil"
+  },
+  {
+    "Category":"Gabonafélék",
+    "Name":"Édes péksütemények (kakaós csiga)",
+    "Weight_Pos":1.65,
+    "Weight_Neg":-2.5,
+    "Notes":"Fehér liszt + cukor + telített zsírok"
+  },
+  {
+    "Category":"Gabonafélék",
+    "Name":"Cukrozott reggeliző pelyhek",
+    "Weight_Pos":1.7,
+    "Weight_Neg":-2.65,
+    "Notes":"Ultra-feldolgozott, üres kalóriák, neurotoxikus tüskék"
+  },
+  {
+    "Category":"Olajok és Zsírok",
+    "Name":"Extra szűz olívaolaj",
+    "Weight_Pos":0.7,
+    "Weight_Neg":1.78,
+    "Notes":"Oleocanthal (gyulladáscsökkentő), mediterrán alap"
+  },
+  {
+    "Category":"Olajok és Zsírok",
+    "Name":"Avokádóolaj",
+    "Weight_Pos":0.78,
+    "Weight_Neg":1.24,
+    "Notes":"Magas füstpont, egészséges zsírsavprofil"
+  },
+  {
+    "Category":"Olajok és Zsírok",
+    "Name":"Lenmagolaj",
+    "Weight_Pos":0.75,
+    "Weight_Neg":1.44,
+    "Notes":"Omega-3 (hőre érzékeny, csak hidegen!)"
+  },
+  {
+    "Category":"Olajok és Zsírok",
+    "Name":"Kókuszzsír",
+    "Weight_Pos":1.2,
+    "Weight_Neg":-0.91,
+    "Notes":"Magas telített zsír, megosztó a kutatásokban, de inkább kerülendő"
+  },
+  {
+    "Category":"Olajok és Zsírok",
+    "Name":"Napraforgóolaj (finomított)",
+    "Weight_Pos":1.35,
+    "Weight_Neg":-1.5,
+    "Notes":"Omega-6 dominancia, pro-inflammatorikus (gyulladáskeltő)"
+  },
+  {
+    "Category":"Olajok és Zsírok",
+    "Name":"Vaj",
+    "Weight_Pos":1.45,
+    "Weight_Neg":-1.86,
+    "Notes":"Telített zsírsavak, csökkenti az agyi mikrokapillárisok rugalmasságát"
+  },
+  {
+    "Category":"Olajok és Zsírok",
+    "Name":"Kacsazsír \/ Sertészsír",
+    "Weight_Pos":1.5,
+    "Weight_Neg":-2.03,
+    "Notes":"Klasszikus állati zsírok, magas szív-érrendszeri kockázat"
+  },
+  {
+    "Category":"Olajok és Zsírok",
+    "Name":"Margarin (hidrogénezett\/kocka)",
+    "Weight_Pos":1.85,
+    "Weight_Neg":-3.08,
+    "Notes":"Transzzsírok - közvetlen endothel károsító"
+  },
+  {
+    "Category":"Hüvelyesek és Szója",
+    "Name":"Lencse (barna\/vörös)",
+    "Weight_Pos":0.8,
+    "Weight_Neg":1.12,
+    "Notes":"Kiváló vas, folsav és rost forrás"
+  },
+  {
+    "Category":"Hüvelyesek és Szója",
+    "Name":"Csicseriborsó",
+    "Weight_Pos":0.82,
+    "Weight_Neg":0.99,
+    "Notes":"Növényi fehérje, stabil energiaellátás az agynak"
+  },
+  {
+    "Category":"Hüvelyesek és Szója",
+    "Name":"Vörösbab \/ Feketebab",
+    "Weight_Pos":0.82,
+    "Weight_Neg":0.99,
+    "Notes":"A héj tele van antioxidánsokkal (antocianin)"
+  },
+  {
+    "Category":"Hüvelyesek és Szója",
+    "Name":"Zöldborsó \/ Zöldbab",
+    "Weight_Pos":0.88,
+    "Weight_Neg":0.64,
+    "Notes":"Könnyebben emészthető, jó rostforrás"
+  },
+  {
+    "Category":"Hüvelyesek és Szója",
+    "Name":"Tofu (natúr)",
+    "Weight_Pos":0.85,
+    "Weight_Neg":0.81,
+    "Notes":"Teljes értékű növényi fehérje (izoflavonok)"
+  },
+  {
+    "Category":"Hüvelyesek és Szója",
+    "Name":"Tempeh",
+    "Weight_Pos":0.78,
+    "Weight_Neg":1.24,
+    "Notes":"Fermentált szója (bélflóra védő + fehérje)"
+  },
+  {
+    "Category":"Halak és Húsok",
+    "Name":"Vadlazac",
+    "Weight_Pos":0.72,
+    "Weight_Neg":1.64,
+    "Notes":"DHA (Omega-3) - közvetlen neurogenezis támogató"
+  },
+  {
+    "Category":"Halak és Húsok",
+    "Name":"Szardínia \/ Makréla",
+    "Weight_Pos":0.75,
+    "Weight_Neg":1.44,
+    "Notes":"Alacsony higanytartalmú, Omega-3 dús kis halak"
+  },
+  {
+    "Category":"Halak és Húsok",
+    "Name":"Tonhal (konzerv\/friss)",
+    "Weight_Pos":0.85,
+    "Weight_Neg":0.81,
+    "Notes":"Jó fehérje, de magasabb nehézfém kockázat (hetente 1x)"
+  },
+  {
+    "Category":"Halak és Húsok",
+    "Name":"Fehér halak (Tőkehal, Hekk)",
+    "Weight_Pos":0.88,
+    "Weight_Neg":0.64,
+    "Notes":"Sovány fehérjeforrás, de kevesebb Omega-3"
+  },
+  {
+    "Category":"Halak és Húsok",
+    "Name":"Csirkemell (bőr nélkül)",
+    "Weight_Pos":0.95,
+    "Weight_Neg":0.26,
+    "Notes":"Tiszta, semleges fehérjeforrás"
+  },
+  {
+    "Category":"Halak és Húsok",
+    "Name":"Pulykamell",
+    "Weight_Pos":0.92,
+    "Weight_Neg":0.42,
+    "Notes":"Triptofán tartalom (szerotonin előanyag)"
+  },
+  {
+    "Category":"Halak és Húsok",
+    "Name":"Csirkecomb (bőrrel)",
+    "Weight_Pos":1.15,
+    "Weight_Neg":-0.7,
+    "Notes":"Több telített állati zsír és kalória"
+  },
+  {
+    "Category":"Halak és Húsok",
+    "Name":"Kacsamell",
+    "Weight_Pos":1.2,
+    "Weight_Neg":-0.91,
+    "Notes":"Magasabb zsírtartalom a szárnyasok között"
+  },
+  {
+    "Category":"Halak és Húsok",
+    "Name":"Sertéskaraj",
+    "Weight_Pos":1.3,
+    "Weight_Neg":-1.31,
+    "Notes":"Vörös hús, heti limit javasolt"
+  },
+  {
+    "Category":"Halak és Húsok",
+    "Name":"Marha steak (sovány)",
+    "Weight_Pos":1.35,
+    "Weight_Neg":-1.5,
+    "Notes":"Vörös hús, vas forrás de emeli a gyulladásszintet (TMAO)"
+  },
+  {
+    "Category":"Halak és Húsok",
+    "Name":"Bacon \/ Szalonna",
+    "Weight_Pos":1.65,
+    "Weight_Neg":-2.5,
+    "Notes":"Füstölt, nagyon magas só és telített zsír"
+  },
+  {
+    "Category":"Halak és Húsok",
+    "Name":"Szalámi \/ Kolbász",
+    "Weight_Pos":1.68,
+    "Weight_Neg":-2.59,
+    "Notes":"Feldolgozott hús, nitrites sók, karcinogén gyanú"
+  },
+  {
+    "Category":"Halak és Húsok",
+    "Name":"Virsli \/ Párizsi \/ Löncshús",
+    "Weight_Pos":1.75,
+    "Weight_Neg":-2.8,
+    "Notes":"Ultra-feldolgozott, kötőszövetes zsiradék, agyi érrendszerre káros"
+  },
+  {
+    "Category":"Tejtermékek",
+    "Name":"Kefir",
+    "Weight_Pos":0.8,
+    "Weight_Neg":1.12,
+    "Notes":"Probiotikumok (Lactobacillus), gut-brain axis támogató"
+  },
+  {
+    "Category":"Tejtermékek",
+    "Name":"Natúr görög joghurt",
+    "Weight_Pos":0.85,
+    "Weight_Neg":0.81,
+    "Notes":"Magas fehérje, jó baktériumok, alacsony laktóz"
+  },
+  {
+    "Category":"Tejtermékek",
+    "Name":"Sovány túró \/ Cottage cheese",
+    "Weight_Pos":0.92,
+    "Weight_Neg":0.42,
+    "Notes":"Lassú felszívódású kazein fehérje"
+  },
+  {
+    "Category":"Tejtermékek",
+    "Name":"Tej (1.5%)",
+    "Weight_Pos":1.05,
+    "Weight_Neg":-0.24,
+    "Notes":"Alacsony zsírtartalom, kalciumforrás, de enyhén pro-inflammatorikus lehet"
+  },
+  {
+    "Category":"Tejtermékek",
+    "Name":"Tej (3.5% házi)",
+    "Weight_Pos":1.25,
+    "Weight_Neg":-1.12,
+    "Notes":"Magas telített zsír, a MIND diéta korlátozza"
+  },
+  {
+    "Category":"Tejtermékek",
+    "Name":"Trappista \/ Edami sajt",
+    "Weight_Pos":1.4,
+    "Weight_Neg":-1.68,
+    "Notes":"Magas zsírtartalmú kemény sajt (limitált fogyasztás)"
+  },
+  {
+    "Category":"Tejtermékek",
+    "Name":"Camembert \/ Brie",
+    "Weight_Pos":1.45,
+    "Weight_Neg":-1.86,
+    "Notes":"Zsírdús lágy sajtok"
+  },
+  {
+    "Category":"Tejtermékek",
+    "Name":"Feta \/ Mozzarella",
+    "Weight_Pos":1.2,
+    "Weight_Neg":-0.91,
+    "Notes":"Alacsonyabb zsírtartalmú sajtok, mediterrán vonal"
+  },
+  {
+    "Category":"Tejtermékek",
+    "Name":"Cukrozott gyümölcsjoghurt",
+    "Weight_Pos":1.5,
+    "Weight_Neg":-2.03,
+    "Notes":"Magas hozzáadott cukor elrontja a probiotikus hatást"
+  },
+  {
+    "Category":"Tejtermékek",
+    "Name":"Zabital (hozzáadott cukor nélkül)",
+    "Weight_Pos":0.95,
+    "Weight_Neg":0.26,
+    "Notes":"Semleges növényi alternatíva, koleszterinmentes"
+  },
+  {
+    "Category":"Tejtermékek",
+    "Name":"Mandulaital (cukormentes)",
+    "Weight_Pos":0.9,
+    "Weight_Neg":0.53,
+    "Notes":"Alacsony kalória, E-vitamin nyomok"
+  },
+  {
+    "Category":"Fűszerek és Egyéb",
+    "Name":"Kurkuma (feketeborssal)",
+    "Weight_Pos":0.65,
+    "Weight_Neg":2.15,
+    "Notes":"Kurkumin: bizonyított Alzheimer prevenciós hatás"
+  },
+  {
+    "Category":"Fűszerek és Egyéb",
+    "Name":"Fahéj (Ceylon)",
+    "Weight_Pos":0.75,
+    "Weight_Neg":1.44,
+    "Notes":"Stabilizálja a vércukorszintet, javítja az inzulinérzékenységet"
+  },
+  {
+    "Category":"Fűszerek és Egyéb",
+    "Name":"Gyömbér",
+    "Weight_Pos":0.78,
+    "Weight_Neg":1.24,
+    "Notes":"Erős gyulladáscsökkentő és emésztést segítő"
+  },
+  {
+    "Category":"Fűszerek és Egyéb",
+    "Name":"Oregánó \/ Rozmaring",
+    "Weight_Pos":0.75,
+    "Weight_Neg":1.44,
+    "Notes":"Rozmaringsav, védi a memóriáért felelős agyterületeket"
+  },
+  {
+    "Category":"Fűszerek és Egyéb",
+    "Name":"Tojás (főtt)",
+    "Weight_Pos":0.98,
+    "Weight_Neg":0.1,
+    "Notes":"Kolin tartalma építi az agyat, de a sárgája miatt koleszterin forrás"
+  },
+  {
+    "Category":"Fűszerek és Egyéb",
+    "Name":"Tojás (rántotta vajon\/olajon)",
+    "Weight_Pos":1.25,
+    "Weight_Neg":-1.12,
+    "Notes":"A hozzáadott zsiradék rontja az amúgy jó profilt"
+  },
+  {
+    "Category":"Fűszerek és Egyéb",
+    "Name":"Savanyú káposzta (nyers)",
+    "Weight_Pos":0.78,
+    "Weight_Neg":1.24,
+    "Notes":"Természetes pre- és probiotikum"
+  },
+  {
+    "Category":"Fűszerek és Egyéb",
+    "Name":"Kimcsi",
+    "Weight_Pos":0.75,
+    "Weight_Neg":1.44,
+    "Notes":"Koreai fermentált zöldség, neuroprotektív bélflóra építő"
+  },
+  {
+    "Category":"Édességek és Nassok",
+    "Name":"Étcsokoládé (75%+)",
+    "Weight_Pos":0.8,
+    "Weight_Neg":1.12,
+    "Notes":"Flavanolok javítják a frontális lebeny vérellátását"
+  },
+  {
+    "Category":"Édességek és Nassok",
+    "Name":"Étcsokoládé (50%)",
+    "Weight_Pos":1.1,
+    "Weight_Neg":-0.48,
+    "Notes":"Több a cukor, mint a hasznos kakaó"
+  },
+  {
+    "Category":"Édességek és Nassok",
+    "Name":"Tejcsokoládé \/ Fehércsoki",
+    "Weight_Pos":1.55,
+    "Weight_Neg":-2.19,
+    "Notes":"Üres kalóriák, hirtelen vércukor-ingadozás"
+  },
+  {
+    "Category":"Édességek és Nassok",
+    "Name":"Méz",
+    "Weight_Pos":1.15,
+    "Weight_Neg":-0.7,
+    "Notes":"Bár természetes, az agy számára gyors egyszerű cukor"
+  },
+  {
+    "Category":"Édességek és Nassok",
+    "Name":"Cukorka \/ Gumicukor",
+    "Weight_Pos":1.8,
+    "Weight_Neg":-2.94,
+    "Notes":"Színtiszta glükóz\/fruktóz szirup + színezék"
+  },
+  {
+    "Category":"Édességek és Nassok",
+    "Name":"Krumpliszirom (Chips)",
+    "Weight_Pos":1.7,
+    "Weight_Neg":-2.65,
+    "Notes":"Bő olaj + akrilamid + gyors felszívódású szénhidrát"
+  },
+  {
+    "Category":"Édességek és Nassok",
+    "Name":"Popcorn (natúr\/levegőn pattogtatott)",
+    "Weight_Pos":0.95,
+    "Weight_Neg":0.26,
+    "Notes":"Teljes kiőrlésű nassolnivaló (rost)"
+  },
+  {
+    "Category":"Édességek és Nassok",
+    "Name":"Popcorn (vajas, mozis)",
+    "Weight_Pos":1.55,
+    "Weight_Neg":-2.19,
+    "Notes":"Rengeteg telített zsír és só"
+  },
+  {
+    "Category":"Italok",
+    "Name":"Tiszta víz",
+    "Weight_Pos":1.0,
+    "Weight_Neg":0.0,
+    "Notes":"Alapvető a kognitív funkciókhoz, zéró kockázat"
+  },
+  {
+    "Category":"Italok",
+    "Name":"Zöld tea (cukor nélkül)",
+    "Weight_Pos":0.75,
+    "Weight_Neg":1.44,
+    "Notes":"L-theanin és EGCG: fokozza a fókuszt és védi a neuronokat"
+  },
+  {
+    "Category":"Italok",
+    "Name":"Fekete tea (cukor nélkül)",
+    "Weight_Pos":0.85,
+    "Weight_Neg":0.81,
+    "Notes":"Koffein és polifenolok, jó fókuszfokozó"
+  },
+  {
+    "Category":"Italok",
+    "Name":"Feketekávé (cukor nélkül)",
+    "Weight_Pos":0.88,
+    "Weight_Neg":0.64,
+    "Notes":"Mértékkel fogyasztva Alzheimer és Parkinson prevenciós hatású"
+  },
+  {
+    "Category":"Italok",
+    "Name":"Vörösbor (napi 1 dl)",
+    "Weight_Pos":0.85,
+    "Weight_Neg":0.81,
+    "Notes":"Rezveratrol, a MIND diéta kis mértékben megengedi (bár vitatott)"
+  },
+  {
+    "Category":"Italok",
+    "Name":"Sör",
+    "Weight_Pos":1.35,
+    "Weight_Neg":-1.5,
+    "Notes":"Magas glikémiás index, alkohol toxicitás"
+  },
+  {
+    "Category":"Italok",
+    "Name":"Tömény alkoholok (Vodka stb.)",
+    "Weight_Pos":1.65,
+    "Weight_Neg":-2.5,
+    "Notes":"Közvetlen neurotoxin, agykérgi zsugorodást okoz rendszeresen"
+  },
+  {
+    "Category":"Italok",
+    "Name":"Cukros szénsavas üdítők (Kóla)",
+    "Weight_Pos":1.85,
+    "Weight_Neg":-3.08,
+    "Notes":"Inzulin-rezisztencia okozó, neuroinflammatorikus"
+  },
+  {
+    "Category":"Italok",
+    "Name":"Energiaitalok",
+    "Weight_Pos":1.9,
+    "Weight_Neg":-3.21,
+    "Notes":"Túlzott koffein, hatalmas cukorsokk vagy mesterséges édesítők, taurin felborítja az alvást"
+  },
+  {
+    "Category":"Italok",
+    "Name":"100% Gyümölcslé (Narancslé)",
+    "Weight_Pos":1.15,
+    "Weight_Neg":-0.7,
+    "Notes":"Sok vitamin, de rost nélküli folyékony fruktóz"
+  },
+  {
+    "Category":"Italok",
+    "Name":"Zero\/Light üdítők",
+    "Weight_Pos":1.1,
+    "Weight_Neg":-0.48,
+    "Notes":"Cukor nincs, de a bélflórát károsíthatják a kutatások szerint"
+  },
+  {
+    "Category":"Ízesítők és Szószok",
+    "Name":"Ketchup",
+    "Weight_Pos":1.25,
+    "Weight_Neg":-1.12,
+    "Notes":"Jelentős mennyiségű hozzáadott cukrot tartalmaz"
+  },
+  {
+    "Category":"Ízesítők és Szószok",
+    "Name":"Mustár",
+    "Weight_Pos":0.9,
+    "Weight_Neg":0.53,
+    "Notes":"Mustármag, kurkuma és ecet - kifejezetten jó profil"
+  },
+  {
+    "Category":"Ízesítők és Szószok",
+    "Name":"Majonéz (Bolti)",
+    "Weight_Pos":1.5,
+    "Weight_Neg":-2.03,
+    "Notes":"Finomított növényi olajok (Omega-6) emelik a gyulladásszintet"
+  },
+  {
+    "Category":"Ízesítők és Szószok",
+    "Name":"Szójaszósz",
+    "Weight_Pos":1.15,
+    "Weight_Neg":-0.7,
+    "Notes":"Nagyon magas nátriumtartalom, ami negatívan hat a vérnyomásra"
+  },
+  {
+    "Category":"Ízesítők és Szószok",
+    "Name":"Almaecet",
+    "Weight_Pos":0.85,
+    "Weight_Neg":0.81,
+    "Notes":"Javítja az inzulinérzékenységet és a glikémiás reakciót"
+  },
+  {
+    "Category":"Ízesítők és Szószok",
+    "Name":"Csípős paprikakrém (pl. Erős Pista)",
+    "Weight_Pos":0.88,
+    "Weight_Neg":0.64,
+    "Notes":"Kapszaicin (gyulladáscsökkentő), de magas sótartalom"
+  },
+  {
+    "Category":"Ízesítők és Szószok",
+    "Name":"Balzsamecet",
+    "Weight_Pos":0.92,
+    "Weight_Neg":0.42,
+    "Notes":"Antioxidánsok, de a sűrítmények sok cukrot tartalmazhatnak"
+  },
+  {
+    "Category":"Sütés és Kamra",
+    "Name":"Kakaópor (Cukrozatlan, 100%)",
+    "Weight_Pos":0.7,
+    "Weight_Neg":1.78,
+    "Notes":"Flavanolok: az egyik legerősebb agyi vérkeringés-fokozó"
+  },
+  {
+    "Category":"Sütés és Kamra",
+    "Name":"Sütőpor \/ Élesztő",
+    "Weight_Pos":1.0,
+    "Weight_Neg":0.0,
+    "Notes":"Biológiailag semleges a MIND diéta szempontjából"
+  },
+  {
+    "Category":"Sütés és Kamra",
+    "Name":"Étkezési keményítő",
+    "Weight_Pos":1.15,
+    "Weight_Neg":-0.7,
+    "Notes":"Gyorsan felszívódó, üres szénhidrát (sűrítőanyag)"
+  },
+  {
+    "Category":"Sütés és Kamra",
+    "Name":"Kókuszreszelék",
+    "Weight_Pos":1.1,
+    "Weight_Neg":-0.48,
+    "Notes":"Rostos, de magas a telített zsírsav tartalma"
+  },
+  {
+    "Category":"Sütés és Kamra",
+    "Name":"Mandulaliszt",
+    "Weight_Pos":0.82,
+    "Weight_Neg":0.99,
+    "Notes":"Kiváló alacsony glikémiás indexű, E-vitamin dús alternatíva"
+  },
+  {
+    "Category":"Kiegészítők és Extrák",
+    "Name":"Tejsavó (Whey) fehérjepor",
+    "Weight_Pos":0.95,
+    "Weight_Neg":0.26,
+    "Notes":"Tiszta aminosav-profil, gyors felszívódás, agy számára semleges-pozitív"
+  },
+  {
+    "Category":"Kiegészítők és Extrák",
+    "Name":"Vegán fehérjepor (Borsó\/Rizs)",
+    "Weight_Pos":0.92,
+    "Weight_Neg":0.42,
+    "Notes":"Növényi eredetű aminosavak, stabil vércukor"
+  },
+  {
+    "Category":"Kiegészítők és Extrák",
+    "Name":"Csontleves (Alaplé)",
+    "Weight_Pos":0.9,
+    "Weight_Neg":0.53,
+    "Notes":"Kollagén és ásványi anyagok, támogatja a bélfalat"
+  },
+  {
+    "Category":"Bolti Készételek és Alternatívák",
+    "Name":"Vegán sajt (Kókuszolaj alapú)",
+    "Weight_Pos":1.65,
+    "Weight_Neg":-2.5,
+    "Notes":"Ultra-feldolgozott, tiszta telített zsír és keményítő (kerülendő)"
+  },
+  {
+    "Category":"Bolti Készételek és Alternatívák",
+    "Name":"Puffasztott rizsszelet",
+    "Weight_Pos":1.25,
+    "Weight_Neg":-1.12,
+    "Notes":"Extrém magas glikémiás index, üres kalória"
+  },
+  {
+    "Category":"Bolti Készételek és Alternatívák",
+    "Name":"Instant levesek \/ Porlevesek",
+    "Weight_Pos":1.8,
+    "Weight_Neg":-2.94,
+    "Notes":"Nátrium-glutamát (MSG), rengeteg só, mesterséges adalékok"
+  },
+  {
+    "Category":"Bolti Készételek és Alternatívák",
+    "Name":"Ecetes savanyúság (Nem erjesztett)",
+    "Weight_Pos":1.05,
+    "Weight_Neg":-0.24,
+    "Notes":"Zöldség alap, de hozzáadott cukor és tartósítószer rontja a képet"
+  },
+  {
+    "Category":"Bolti Készételek és Alternatívák",
+    "Name":"Máj (Csirke\/Sertés\/Marha)",
+    "Weight_Pos":1.1,
+    "Weight_Neg":-0.48,
+    "Notes":"Tápanyag-bomba (vas, B12), de magas koleszterin és A-vitamin túladagolás veszély (ritkán fogyasztandó)"
+  }
+]
