@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@google/genai": "^0.1.2",
+    "@google/generative-ai": "^0.14.0",
     "@upstash/redis": "^1.31.3",
     "next": "14.2.3",
     "@ducanh2912/next-pwa": "^9.7.1",
