@@ -5,7 +5,7 @@ let logs = JSON.parse(localStorage.getItem('health_logs')) || [];
 // Segéd: Adatbázis betöltése
 async function fetchDatabase() {
     try {
-        const res = await fetch('/data/food_database.json');
+        const res = await fetch('data/food_database.json');
         foodDatabase = await res.json();
     } catch (e) {
         console.error('Nem sikerült betölteni az adatbázist', e);
