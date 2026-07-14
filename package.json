@@ -1,24 +1,9 @@
 {
-  "name": "health-tracker-pwa",
-  "version": "0.1.0",
+  "name": "health-tracker",
+  "version": "1.0.0",
   "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
   "dependencies": {
     "@google/generative-ai": "^0.14.0",
-    "@upstash/redis": "^1.31.3",
-    "next": "14.2.3",
-    "@ducanh2912/next-pwa": "^9.7.1",
-    "react": "^18",
-    "react-dom": "^18",
-    "recharts": "^2.12.7"
-  },
-  "devDependencies": {
-    "eslint": "^8",
-    "eslint-config-next": "14.2.3"
+    "@upstash/redis": "^1.31.3"
   }
 }
