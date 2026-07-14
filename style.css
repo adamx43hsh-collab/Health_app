@@ -45,12 +45,18 @@ body {
   width: 100%;
 }
 
-h1, h2, h3, h4 {
+h1 {
   font-weight: 600;
   margin-bottom: 1rem;
   background: linear-gradient(to right, var(--text-primary), var(--text-secondary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+h2, h3, h4 {
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
 }
 
 p {

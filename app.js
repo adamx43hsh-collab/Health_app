@@ -3,6 +3,14 @@ let foodDatabase = [];
 let logs = JSON.parse(localStorage.getItem('health_logs')) || [];
 let scoreChartInstance = null;
 
+// Segéd: Súly kinyerése (támogatja a régi logs formátumot is)
+function getLogWeight(log) {
+    if (log.weight !== undefined) return log.weight;
+    if (log.score !== undefined) return log.score;
+    const dbItem = foodDatabase.find(f => f.name.toLowerCase() === log.foodName.toLowerCase());
+    return dbItem ? dbItem.weight : 0;
+}
+
 // Segéd: Adatbázis betöltése
 async function fetchDatabase() {
     try {
@@ -104,14 +112,14 @@ function renderLogs() {
         li.style.justifyContent = 'space-between';
         li.style.alignItems = 'center';
         
-        const scoreVal = log.weight;
+        const scoreVal = getLogWeight(log);
         const color = scoreVal > 0 ? 'var(--accent-primary)' : (scoreVal < 0 ? 'var(--danger)' : 'var(--text-secondary)');
         const scoreText = scoreVal > 0 ? `+${scoreVal.toFixed(2)} súly` : `${scoreVal.toFixed(2)} súly`;
 
         li.innerHTML = `
             <div>
                 <strong>${log.foodName}</strong> <br>
-                <small style="color:var(--text-secondary)">${log.category} | ${log.amount} adag</small>
+                <small style="color:var(--text-secondary)">${log.category || 'Egyéb'} | ${log.amount} adag</small>
             </div>
             <span style="color:${color}; font-weight:bold;">${scoreText}</span>
         `;
@@ -127,7 +135,7 @@ function getScoreForPeriod(periodLogs) {
     let totalPortions = 0;
     
     periodLogs.forEach(log => {
-        totalWeightScore += (log.amount * log.weight);
+        totalWeightScore += (log.amount * getLogWeight(log));
         totalPortions += log.amount;
     });
     
@@ -229,7 +237,8 @@ function calculateDiversity() {
 
     const activeGroups = new Set();
     weeklyLogs.forEach(log => {
-        const mapped = categoryMapping[log.category];
+        const cat = log.category || 'Egyéb';
+        const mapped = categoryMapping[cat];
         if (mapped) activeGroups.add(mapped);
         
         // Külön tojás detektálás (MDD-W csoport)
@@ -247,7 +256,7 @@ function calculateDiversity() {
         'Hüvelyesek és Szója', 'Diófélék és magvak', 
         'Gabonafélék', 'Fűszerek és Egyéb'
     ];
-    const plantLogs = weeklyLogs.filter(l => plantCategories.includes(l.category));
+    const plantLogs = weeklyLogs.filter(l => plantCategories.includes(l.category || 'Egyéb'));
     const uniquePlants = new Set(plantLogs.map(l => l.foodName.toLowerCase()));
 
     document.getElementById('div-plants').innerText = `${uniquePlants.size} / 30`;
@@ -266,14 +275,14 @@ function calculateDiversity() {
 
     weeklyLogs.forEach(log => {
         const name = log.foodName.toLowerCase();
-        const cat = log.category;
+        const cat = log.category || 'Egyéb';
 
         // Vörös húsok
         if (name.includes('marha') || name.includes('sertés') || name.includes('kolbász') || name.includes('szalámi') || name.includes('virsli') || name.includes('sonka') || name.includes('szalonna')) {
             counts.redMeat += log.amount;
         }
-        // Vaj / Margarin
-        if (name.includes('vaj') || name.includes('margarin')) {
+        // Vaj / Margarin (olajok és zsírok kategórián belül szűrjük a téves mogyoróvaj, vajbab stb. ellen)
+        if ((cat === 'Olajok és Zsírok' && (name.includes('vaj') || name.includes('margarin'))) || (name === 'vaj' || name === 'margarin')) {
             counts.butter += log.amount;
         }
         // Sajt
@@ -385,27 +394,34 @@ function renderStats() {
     const historyList = document.getElementById('stats-history-list');
     historyList.innerHTML = '';
     
-    // Csoportosítás napok szerint
+    // Csoportosítás napok szerint (ISO dátumkulccsal a helyes string összehasonlításos rendezésért)
     const grouped = {};
     logs.forEach(log => {
-        const date = new Date(log.timestamp).toLocaleDateString('hu-HU', { year: 'numeric', month: 'long', day: 'numeric' });
-        if (!grouped[date]) grouped[date] = [];
-        grouped[date].push(`${log.foodName} (${log.amount} adag)`);
+        try {
+            const dateKey = new Date(log.timestamp).toISOString().split('T')[0]; // e.g. "2026-07-14"
+            if (!grouped[dateKey]) grouped[dateKey] = [];
+            grouped[dateKey].push(`${log.foodName} (${log.amount} adag)`);
+        } catch (e) {
+            console.error("Dátum konverziós hiba a statisztikában", e);
+        }
     });
 
-    const sortedDays = Object.entries(grouped).sort((a, b) => new Date(b[0]) - new Date(a[0])).slice(0, 7);
+    const sortedDays = Object.entries(grouped)
+        .sort((a, b) => b[0].localeCompare(a[0]))
+        .slice(0, 7);
 
     if (sortedDays.length === 0) {
         historyList.innerHTML = '<p>Nincs még bejegyzés.</p>';
     }
 
-    sortedDays.forEach(([date, foods]) => {
+    sortedDays.forEach(([dateKey, foods]) => {
+        const friendlyDate = new Date(dateKey).toLocaleDateString('hu-HU', { year: 'numeric', month: 'long', day: 'numeric' });
         const li = document.createElement('li');
         li.style.marginBottom = '12px';
         li.style.padding = '10px';
         li.style.background = 'rgba(255,255,255,0.02)';
         li.style.borderRadius = '6px';
-        li.innerHTML = `<span style="font-size:0.85rem; color:var(--accent-secondary); font-weight:bold;">${date}</span><br><span style="font-size:0.9rem;">${foods.join(', ')}</span>`;
+        li.innerHTML = `<span style="font-size:0.85rem; color:var(--accent-secondary); font-weight:bold;">${friendlyDate}</span><br><span style="font-size:0.9rem;">${foods.join(', ')}</span>`;
         historyList.appendChild(li);
     });
 }
