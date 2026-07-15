@@ -180,11 +180,23 @@ function renderLogs() {
                 <strong>${log.foodName}</strong> <br>
                 <small style="color:var(--text-secondary)">${log.category || 'Egyéb'} | ${log.amount} adag</small>
             </div>
-            <span style="color:${color}; font-weight:bold;">${scoreText}</span>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <span style="color:${color}; font-weight:bold;">${scoreText}</span>
+                <button onclick="deleteLog('${log.id}')" style="background: none; border: none; color: var(--danger); font-size: 1.2rem; cursor: pointer; padding: 0 4px; opacity: 0.8; transition: opacity 0.2s;">&times;</button>
+            </div>
         `;
         list.appendChild(li);
     });
 }
+
+// Log bejegyzés törlése
+window.deleteLog = function(id) {
+    logs = logs.filter(l => l.id !== id);
+    saveLogs();
+    renderLogs();
+    calculateScore();
+    calculateDiversity();
+};
 
 // WDMS pont kiszámítása egy időszakra
 function getScoreForPeriod(periodLogs) {
@@ -941,6 +953,7 @@ A választ szigorúan és kizárólag érvényes JSON formátumban add meg, mind
             const P = Math.round(100 / (1 + Math.exp(-0.05 * S)));
             
             const newCustomFood = {
+                id: Date.now().toString(),
                 name: mealName,
                 weight: avgWeight,
                 score: P,
@@ -1015,14 +1028,14 @@ function renderCustomMeals() {
             <div style="font-size: 0.85rem; color: var(--text-secondary); padding-top: 0.5rem; border-top: 1px solid rgba(255,255,255,0.05);">
                 <strong>Összetevők (100g-ban):</strong> ${ingNames}
             </div>
-            <button onclick="deleteCustomMeal('${food.name.replace(/'/g, "\\'")}')" style="align-self: flex-end; background: none; border: none; color: var(--danger); font-size: 0.85rem; cursor: pointer; padding: 4px; opacity: 0.8; transition: opacity 0.2s;">Törlés</button>
+            <button onclick="deleteCustomMeal('${food.id || food.name.replace(/'/g, "\\'")}')" style="align-self: flex-end; background: none; border: none; color: var(--danger); font-size: 0.85rem; cursor: pointer; padding: 4px; opacity: 0.8; transition: opacity 0.2s;">Törlés</button>
         `;
         list.appendChild(li);
     });
 }
 
-window.deleteCustomMeal = function(name) {
-    customFoods = customFoods.filter(f => f.name !== name);
+window.deleteCustomMeal = function(idOrName) {
+    customFoods = customFoods.filter(f => f.id !== idOrName && f.name !== idOrName);
     localStorage.setItem('health_custom_foods', JSON.stringify(customFoods));
     renderCustomMeals();
     refreshAutocomplete();
