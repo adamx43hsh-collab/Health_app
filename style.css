@@ -216,18 +216,27 @@ input:focus {
   }
 }
 
-/* ===== Coach Tab Layout ===== */
+/* ===== Coach Tab Layout (Fixed and Keyboard Resistant) ===== */
 .coach-tab {
+  position: fixed !important;
+  top: 100px;
+  bottom: 85px;
+  left: 1rem;
+  right: 1rem;
   padding: 0 !important;
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 260px);
   overflow: hidden;
+  margin: 0;
+  z-index: 10;
 }
 
 @media (max-width: 600px) {
   .coach-tab {
-    height: calc(100vh - 210px);
+    top: 75px;
+    bottom: 80px;
+    left: 0.5rem;
+    right: 0.5rem;
   }
 }
 
