@@ -1059,3 +1059,33 @@ if ('caches' in window) {
             caches.delete(name);
     });
 }
+
+// Karbantartás Gombok (Gyorsítótár törlés és Teljes adat nullázás)
+const btnClearCache = document.getElementById('btn-clear-cache');
+if (btnClearCache) {
+    btnClearCache.addEventListener('click', () => {
+        if (confirm('Biztosan ki akarod üríteni a böngésző gyorsítótárat? Ez frissíti az alkalmazást a legújabb verzióra.')) {
+            if ('caches' in window) {
+                caches.keys().then(names => {
+                    Promise.all(names.map(name => caches.delete(name))).then(() => {
+                        window.location.reload(true);
+                    });
+                });
+            } else {
+                window.location.reload(true);
+            }
+        }
+    });
+}
+
+const btnDeleteAllData = document.getElementById('btn-delete-all-data');
+if (btnDeleteAllData) {
+    btnDeleteAllData.addEventListener('click', () => {
+        if (confirm('VIGYÁZAT! Ez törli az összes eddigi étkezési naplódat és a saját étel adatbázisodat. A művelet nem vonható vissza. Folytatod?')) {
+            localStorage.removeItem('health_logs');
+            localStorage.removeItem('health_custom_foods');
+            alert('Minden felhasználói adat törölve lett. Az alkalmazás most újraindul.');
+            window.location.reload(true);
+        }
+    });
+}
