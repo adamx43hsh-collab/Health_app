@@ -8,8 +8,8 @@
     <meta name="theme-color" content="#0f172a">
     <link rel="stylesheet" href="style.css">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-    <!-- Chart.js for stats -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chart.js (lokális másolat a WebView kompatibilitáshoz) -->
+    <script src="chart.min.js"></script>
 </head>
 <body>
     <div class="main-content">
@@ -140,25 +140,29 @@
         </div>
 
         <!-- COACH TAB -->
-        <div id="tab-coach" class="tab-content glass animate-fade-in" style="padding: 2rem; display: none; flex-direction: column; height: 60vh;">
-            <h2>AI Health Coach</h2>
-            <div id="coach-chat" style="flex: 1; overflow-y: auto; margin-bottom: 1rem; display: flex; flex-direction: column; gap: 1rem;">
-                <div style="align-self: flex-start; background: rgba(255,255,255,0.1); padding: 12px 16px; border-radius: 16px; border-bottom-left-radius: 0; max-width: 80%;">
+        <div id="tab-coach" class="tab-content glass animate-fade-in" style="padding: 0; display: none; flex-direction: column; height: calc(100vh - 180px); overflow: hidden;">
+            <div style="padding: 1rem 1.5rem 0.5rem 1.5rem;">
+                <h2 style="margin-bottom: 0;">AI Health Coach</h2>
+            </div>
+            <div id="coach-chat" style="flex: 1; overflow-y: auto; padding: 0.5rem 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; min-height: 0;">
+                <div style="align-self: flex-start; background: rgba(255,255,255,0.1); padding: 12px 16px; border-radius: 16px; border-bottom-left-radius: 0; max-width: 85%;">
                     Szia! Miben segíthetek ma a táplálkozásoddal kapcsolatban?
                 </div>
             </div>
-            <form id="coach-form" style="display: flex; gap: 0.5rem; align-items: center;">
-                <input type="file" id="coach-file" accept="image/*" style="display: none;">
-                <button id="btn-upload" type="button" class="glass" style="padding: 10px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-sm); cursor: pointer;">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-primary);"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
-                </button>
-                <input type="text" id="coach-input" placeholder="Kérdezz vagy küldj képet az ételről..." style="flex: 1;" required>
-                <button type="submit">Küldés</button>
-            </form>
-            <div id="image-preview-container" style="display: none; align-items: center; gap: 0.5rem; margin-top: 0.5rem; padding: 0.5rem; background: rgba(255,255,255,0.05); border-radius: 8px;">
-                <img id="image-preview" src="" style="max-height: 50px; border-radius: 4px;">
-                <span id="image-preview-name" style="font-size: 0.85rem; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 150px;">Kép</span>
-                <button id="btn-remove-image" type="button" style="background: none; border: none; color: var(--danger); font-size: 1.2rem; cursor: pointer; padding: 0 5px;">&times;</button>
+            <div style="padding: 0.75rem 1rem; border-top: 1px solid rgba(255,255,255,0.08); background: rgba(15,23,42,0.6);">
+                <div id="image-preview-container" style="display: none; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; padding: 0.5rem; background: rgba(255,255,255,0.05); border-radius: 8px;">
+                    <img id="image-preview" src="" style="max-height: 40px; border-radius: 4px;">
+                    <span id="image-preview-name" style="font-size: 0.8rem; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1;">Kép</span>
+                    <button id="btn-remove-image" type="button" style="background: none; border: none; color: var(--danger); font-size: 1.2rem; cursor: pointer; padding: 0 5px;">&times;</button>
+                </div>
+                <form id="coach-form" style="display: flex; gap: 0.5rem; align-items: center;">
+                    <input type="file" id="coach-file" accept="image/*" style="display: none;">
+                    <button id="btn-upload" type="button" class="glass" style="padding: 8px; width: 40px; height: 40px; min-width: 40px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-sm); cursor: pointer;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-primary);"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+                    </button>
+                    <input type="text" id="coach-input" placeholder="Kérdezz az étkezésedről..." style="flex: 1; padding: 10px 14px; font-size: 0.9rem;" required>
+                    <button type="submit" style="padding: 10px 16px; font-size: 0.9rem;">Küldés</button>
+                </form>
             </div>
         </div>
 

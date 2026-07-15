@@ -214,5 +214,43 @@ input:focus {
   header p {
     font-size: 0.8rem;
   }
+
+  /* Coach tab mobilon */
+  #tab-coach {
+    height: calc(100vh - 150px) !important;
+  }
+}
+
+/* Coach chat buborékok */
+.chat-msg {
+  padding: 10px 14px;
+  border-radius: 16px;
+  max-width: 85%;
+  margin-bottom: 4px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  line-height: 1.5;
+  font-size: 0.92rem;
+}
+
+.chat-msg.user {
+  align-self: flex-end;
+  background: var(--accent-primary);
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+
+.chat-msg.ai-loading {
+  align-self: flex-start;
+  background: rgba(255,255,255,0.05);
+  color: var(--text-secondary);
+  border-bottom-left-radius: 4px;
+}
+
+.chat-msg.ai {
+  align-self: flex-start;
+  background: rgba(255,255,255,0.1);
+  border-bottom-left-radius: 4px;
+  white-space: pre-wrap;
 }
 

@@ -69,7 +69,7 @@ document.querySelectorAll('.nav-item').forEach(item => {
 document.getElementById('log-form').addEventListener('submit', (e) => {
     e.preventDefault();
     const foodNameInput = document.getElementById('foodName').value;
-    const amount = parseFloat(document.getElementById('amount').value);
+    const amount = parseInt(document.getElementById('amount').value, 10);
     const logDateInput = document.getElementById('log-date').value;
     
     const timestamp = logDateInput ? new Date(logDateInput).toISOString() : new Date().toISOString();
@@ -660,26 +660,15 @@ Kérlek, válaszolj a felhasználó kérdésére ezen adatok ismeretében, bará
 
 function appendMessage(text, sender) {
     const div = document.createElement('div');
-    div.style.padding = '12px 16px';
-    div.style.borderRadius = '16px';
-    div.style.maxWidth = '80%';
-    div.style.marginBottom = '8px';
+    div.classList.add('chat-msg');
     
     if (sender === 'user') {
-        div.style.alignSelf = 'flex-end';
-        div.style.background = 'var(--accent-primary)';
-        div.style.color = 'white';
-        div.style.borderBottomRightRadius = '0';
+        div.classList.add('user');
     } else if (sender === 'ai-loading') {
-        div.style.alignSelf = 'flex-start';
-        div.style.background = 'rgba(255,255,255,0.05)';
-        div.style.color = 'var(--text-secondary)';
-        div.style.borderBottomLeftRadius = '0';
+        div.classList.add('ai-loading');
         div.id = 'ai-loading-bubble';
     } else {
-        div.style.alignSelf = 'flex-start';
-        div.style.background = 'rgba(255,255,255,0.1)';
-        div.style.borderBottomLeftRadius = '0';
+        div.classList.add('ai');
     }
     
     div.innerText = text;
@@ -1010,11 +999,6 @@ function initApp() {
 
 initApp();
 
-// Service Worker regisztráció PWA-hoz
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
-            .then(reg => console.log('Service Worker regisztrálva', reg))
-            .catch(err => console.error('Service Worker hiba', err));
-    });
-}
+// Service Worker regisztráció kikapcsolva (nem kompatibilis WebView-val)
+// Az Android appban a file:// protokoll nem támogatja a Service Worker-t,
+// és a fetch interceptor blokkolja az API hívásokat.
