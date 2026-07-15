@@ -15,27 +15,72 @@ function getLogWeight(log) {
 // Segéd: Adatbázis betöltése (Mostantól szinkron, JS-ből)
 function loadDatabase() {
     foodDatabase = window.foodDatabaseData || [];
-    populateDatalist();
+    setupAutocomplete();
 }
 
-// Autocomplete feltöltése
-function populateDatalist() {
-    const datalist = document.getElementById('food-list');
-    datalist.innerHTML = '';
-    
-    // Standard ételek
-    foodDatabase.forEach(item => {
-        const option = document.createElement('option');
-        option.value = item.name;
-        datalist.appendChild(option);
+// Custom Autocomplete rendszer (Android WebView kompatibilis)
+function setupAutocomplete() {
+    const input = document.getElementById('foodName');
+    const dropdown = document.getElementById('food-suggestions');
+    if (!input || !dropdown) return;
+
+    function getAllFoods() {
+        const names = foodDatabase.map(f => f.name);
+        customFoods.forEach(f => {
+            if (!names.includes(f.name)) names.push(f.name);
+        });
+        return names;
+    }
+
+    input.addEventListener('input', () => {
+        const query = input.value.toLowerCase().trim();
+        dropdown.innerHTML = '';
+
+        if (query.length < 1) {
+            dropdown.style.display = 'none';
+            return;
+        }
+
+        const allFoods = getAllFoods();
+        const matches = allFoods.filter(name =>
+            name.toLowerCase().includes(query)
+        ).slice(0, 10);
+
+        if (matches.length === 0) {
+            dropdown.style.display = 'none';
+            return;
+        }
+
+        matches.forEach(name => {
+            const item = document.createElement('div');
+            item.className = 'autocomplete-item';
+            item.innerText = name;
+            item.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                input.value = name;
+                dropdown.style.display = 'none';
+            });
+            dropdown.appendChild(item);
+        });
+
+        dropdown.style.display = 'block';
     });
-    
-    // Egyedi ételek
-    customFoods.forEach(item => {
-        const option = document.createElement('option');
-        option.value = item.name;
-        datalist.appendChild(option);
+
+    input.addEventListener('blur', () => {
+        setTimeout(() => { dropdown.style.display = 'none'; }, 250);
     });
+
+    input.addEventListener('focus', () => {
+        if (input.value.length > 0) {
+            input.dispatchEvent(new Event('input'));
+        }
+    });
+}
+
+// Frissíti az autocomplete-et új ételek hozzáadása után
+function refreshAutocomplete() {
+    // Az autocomplete input event handler automatikusan az aktuális listából dolgozik,
+    // tehát nincs szükség külön frissítésre — a getAllFoods() mindig az élő tömböket olvassa.
 }
 
 // Fülek közötti navigáció
@@ -911,7 +956,7 @@ A választ szigorúan és kizárólag érvényes JSON formátumban add meg, mind
             statusDiv.style.display = 'none';
             
             renderCustomMeals();
-            populateDatalist();
+            refreshAutocomplete();
             
         } catch (parseErr) {
             console.error("Hiba az AI válasz beolvasásakor:", parseErr, responseText);
@@ -980,7 +1025,7 @@ window.deleteCustomMeal = function(name) {
     customFoods = customFoods.filter(f => f.name !== name);
     localStorage.setItem('health_custom_foods', JSON.stringify(customFoods));
     renderCustomMeals();
-    populateDatalist();
+    refreshAutocomplete();
 };
 
 // Inicializálás
