@@ -12,15 +12,10 @@ function getLogWeight(log) {
     return dbItem ? dbItem.weight : 0;
 }
 
-// Segéd: Adatbázis betöltése
-async function fetchDatabase() {
-    try {
-        const res = await fetch('data/food_database.json');
-        foodDatabase = await res.json();
-        populateDatalist();
-    } catch (e) {
-        console.error('Nem sikerült betölteni az adatbázist', e);
-    }
+// Segéd: Adatbázis betöltése (Mostantól szinkron, JS-ből)
+function loadDatabase() {
+    foodDatabase = window.foodDatabaseData || [];
+    populateDatalist();
 }
 
 // Autocomplete feltöltése
@@ -1000,7 +995,8 @@ window.deleteCustomMeal = function(name) {
 };
 
 // Inicializálás
-fetchDatabase().then(() => {
+function initApp() {
+    loadDatabase();
     const logDateInput = document.getElementById('log-date');
     if (logDateInput) {
         logDateInput.valueAsDate = new Date();
@@ -1010,7 +1006,9 @@ fetchDatabase().then(() => {
     calculateDiversity();
     syncWithServer();
     renderCustomMeals();
-});
+}
+
+initApp();
 
 // Service Worker regisztráció PWA-hoz
 if ('serviceWorker' in navigator) {
