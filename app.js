@@ -1,6 +1,7 @@
 // Állapot (State)
 let foodDatabase = [];
 let logs = JSON.parse(localStorage.getItem('health_logs')) || [];
+let customFoods = JSON.parse(localStorage.getItem('health_custom_foods')) || [];
 let scoreChartInstance = null;
 
 // Segéd: Súly kinyerése (támogatja a régi logs formátumot is)
@@ -26,7 +27,16 @@ async function fetchDatabase() {
 function populateDatalist() {
     const datalist = document.getElementById('food-list');
     datalist.innerHTML = '';
+    
+    // Standard ételek
     foodDatabase.forEach(item => {
+        const option = document.createElement('option');
+        option.value = item.name;
+        datalist.appendChild(option);
+    });
+    
+    // Egyedi ételek
+    customFoods.forEach(item => {
         const option = document.createElement('option');
         option.value = item.name;
         datalist.appendChild(option);
@@ -56,6 +66,7 @@ document.querySelectorAll('.nav-item').forEach(item => {
         if (targetId === 'dashboard') calculateScore();
         if (targetId === 'diversity') calculateDiversity();
         if (targetId === 'stats') renderStats();
+        if (targetId === 'custom-meals') renderCustomMeals();
     });
 });
 
@@ -64,18 +75,25 @@ document.getElementById('log-form').addEventListener('submit', (e) => {
     e.preventDefault();
     const foodNameInput = document.getElementById('foodName').value;
     const amount = parseFloat(document.getElementById('amount').value);
+    const logDateInput = document.getElementById('log-date').value;
     
-    // Keresés az adatbázisban
+    const timestamp = logDateInput ? new Date(logDateInput).toISOString() : new Date().toISOString();
+    
+    // Keresés az adatbázisban (standard és egyedi ételekben is)
     const foodItem = foodDatabase.find(f => f.name.toLowerCase() === foodNameInput.toLowerCase()) || 
-                     foodDatabase.find(f => f.name.toLowerCase().includes(foodNameInput.toLowerCase()));
+                     customFoods.find(f => f.name.toLowerCase() === foodNameInput.toLowerCase()) ||
+                     foodDatabase.find(f => f.name.toLowerCase().includes(foodNameInput.toLowerCase())) ||
+                     customFoods.find(f => f.name.toLowerCase().includes(foodNameInput.toLowerCase()));
     
     const newLog = {
         id: Date.now().toString(),
-        timestamp: new Date().toISOString(),
+        timestamp: timestamp,
         foodName: foodItem ? foodItem.name : foodNameInput,
         amount: amount,
         category: foodItem ? foodItem.category : 'Egyéb',
-        weight: foodItem ? foodItem.weight : 0,
+        weight: foodItem ? (foodItem.weight !== undefined ? foodItem.weight : 0) : 0,
+        isCustom: foodItem ? !!foodItem.isCustom : false,
+        customIngredients: foodItem && foodItem.isCustom ? foodItem.ingredients : null,
         synced: false
     };
     
@@ -87,6 +105,7 @@ document.getElementById('log-form').addEventListener('submit', (e) => {
     
     document.getElementById('foodName').value = '';
     document.getElementById('amount').value = '1';
+    document.getElementById('log-date').valueAsDate = new Date();
 });
 
 function saveLogs() {
@@ -237,13 +256,28 @@ function calculateDiversity() {
 
     const activeGroups = new Set();
     weeklyLogs.forEach(log => {
-        const cat = log.category || 'Egyéb';
-        const mapped = categoryMapping[cat];
-        if (mapped) activeGroups.add(mapped);
-        
-        // Külön tojás detektálás (MDD-W csoport)
-        if (log.foodName.toLowerCase().includes('tojás')) {
-            activeGroups.add('eggs');
+        if (log.isCustom && log.customIngredients) {
+            // Egyedi étel összetevőinek kicsomagolása a változatossághoz
+            log.customIngredients.forEach(ing => {
+                const dbItem = foodDatabase.find(f => f.name.toLowerCase() === ing.name.toLowerCase());
+                if (dbItem) {
+                    const cat = dbItem.category || 'Egyéb';
+                    const mapped = categoryMapping[cat];
+                    if (mapped) activeGroups.add(mapped);
+                    if (ing.name.toLowerCase().includes('tojás')) {
+                        activeGroups.add('eggs');
+                    }
+                }
+            });
+        } else {
+            const cat = log.category || 'Egyéb';
+            const mapped = categoryMapping[cat];
+            if (mapped) activeGroups.add(mapped);
+            
+            // Külön tojás detektálás (MDD-W csoport)
+            if (log.foodName.toLowerCase().includes('tojás')) {
+                activeGroups.add('eggs');
+            }
         }
     });
 
@@ -256,8 +290,23 @@ function calculateDiversity() {
         'Hüvelyesek és Szója', 'Diófélék és magvak', 
         'Gabonafélék', 'Fűszerek és Egyéb'
     ];
-    const plantLogs = weeklyLogs.filter(l => plantCategories.includes(l.category || 'Egyéb'));
-    const uniquePlants = new Set(plantLogs.map(l => l.foodName.toLowerCase()));
+    
+    const uniquePlants = new Set();
+    weeklyLogs.forEach(log => {
+        if (log.isCustom && log.customIngredients) {
+            log.customIngredients.forEach(ing => {
+                const dbItem = foodDatabase.find(f => f.name.toLowerCase() === ing.name.toLowerCase());
+                if (dbItem && plantCategories.includes(dbItem.category || 'Egyéb')) {
+                    uniquePlants.add(ing.name.toLowerCase());
+                }
+            });
+        } else {
+            const cat = log.category || 'Egyéb';
+            if (plantCategories.includes(cat)) {
+                uniquePlants.add(log.foodName.toLowerCase());
+            }
+        }
+    });
 
     document.getElementById('div-plants').innerText = `${uniquePlants.size} / 30`;
 
@@ -277,25 +326,51 @@ function calculateDiversity() {
         const name = log.foodName.toLowerCase();
         const cat = log.category || 'Egyéb';
 
-        // Vörös húsok
-        if (name.includes('marha') || name.includes('sertés') || name.includes('kolbász') || name.includes('szalámi') || name.includes('virsli') || name.includes('sonka') || name.includes('szalonna')) {
-            counts.redMeat += log.amount;
-        }
-        // Vaj / Margarin (olajok és zsírok kategórián belül szűrjük a téves mogyoróvaj, vajbab stb. ellen)
-        if ((cat === 'Olajok és Zsírok' && (name.includes('vaj') || name.includes('margarin'))) || (name === 'vaj' || name === 'margarin')) {
-            counts.butter += log.amount;
-        }
-        // Sajt
-        if (name.includes('sajt') && cat === 'Tejtermékek') {
-            counts.cheese += log.amount;
-        }
-        // Gyorsétel
-        if (cat === 'Bolti Készételek és Alternatívák' || name.includes('rántott') || name.includes('sült burgonya') || name.includes('hamburger') || name.includes('pizza')) {
-            counts.fastFood += log.amount;
-        }
-        // Édesség
-        if (cat === 'Édességek és Nassok' || name.includes('cukor') || name.includes('csokoládé') || name.includes('keksz') || name.includes('torta') || name.includes('fánk') || name.includes('croissant')) {
-            counts.sweets += log.amount;
+        if (log.isCustom && log.customIngredients) {
+            // Egyedi étel összetevőinek korlátai
+            log.customIngredients.forEach(ing => {
+                const ingName = ing.name.toLowerCase();
+                const dbItem = foodDatabase.find(f => f.name.toLowerCase() === ingName);
+                const ingCat = dbItem ? dbItem.category : 'Egyéb';
+                const weightedAmount = log.amount * (ing.amount / 100); // 100g-ra jutó arány szorozva adaggal
+
+                if (ingName.includes('marha') || ingName.includes('sertés') || ingName.includes('kolbász') || ingName.includes('szalámi') || ingName.includes('virsli') || ingName.includes('sonka') || ingName.includes('szalonna')) {
+                    counts.redMeat += weightedAmount;
+                }
+                if (ingName.includes('vaj') || ingName.includes('margarin')) {
+                    counts.butter += weightedAmount;
+                }
+                if (ingName.includes('sajt') && ingCat === 'Tejtermékek') {
+                    counts.cheese += weightedAmount;
+                }
+                if (ingCat === 'Bolti Készételek és Alternatívák' || ingName.includes('rántott') || ingName.includes('sült burgonya') || ingName.includes('hamburger') || ingName.includes('pizza')) {
+                    counts.fastFood += weightedAmount;
+                }
+                if (ingCat === 'Édességek és Nassok' || ingName.includes('cukor') || ingName.includes('csokoládé') || ingName.includes('keksz') || ingName.includes('torta') || ingName.includes('fánk') || ingName.includes('croissant')) {
+                    counts.sweets += weightedAmount;
+                }
+            });
+        } else {
+            // Vörös húsok
+            if (name.includes('marha') || name.includes('sertés') || name.includes('kolbász') || name.includes('szalámi') || name.includes('virsli') || name.includes('sonka') || name.includes('szalonna')) {
+                counts.redMeat += log.amount;
+            }
+            // Vaj / Margarin (olajok és zsírok kategórián belül szűrjük a téves mogyoróvaj, vajbab stb. ellen)
+            if ((cat === 'Olajok és Zsírok' && (name.includes('vaj') || name.includes('margarin'))) || (name === 'vaj' || name === 'margarin')) {
+                counts.butter += log.amount;
+            }
+            // Sajt
+            if (name.includes('sajt') && cat === 'Tejtermékek') {
+                counts.cheese += log.amount;
+            }
+            // Gyorsétel
+            if (cat === 'Bolti Készételek és Alternatívák' || name.includes('rántott') || name.includes('sült burgonya') || name.includes('hamburger') || name.includes('pizza')) {
+                counts.fastFood += log.amount;
+            }
+            // Édesség
+            if (cat === 'Édességek és Nassok' || name.includes('cukor') || name.includes('csokoládé') || name.includes('keksz') || name.includes('torta') || name.includes('fánk') || name.includes('croissant')) {
+                counts.sweets += log.amount;
+            }
         }
     });
 
@@ -431,6 +506,55 @@ async function syncWithServer() {
     // Vercel / Redis elfelejtve, minden helyben marad a telefonon
 }
 
+// AI Coach Képfeltöltés Állapot
+let selectedImageBase64 = null;
+let selectedImageType = null;
+
+const coachFile = document.getElementById('coach-file');
+const btnUpload = document.getElementById('btn-upload');
+const imagePreviewContainer = document.getElementById('image-preview-container');
+const imagePreview = document.getElementById('image-preview');
+const imagePreviewName = document.getElementById('image-preview-name');
+const btnRemoveImage = document.getElementById('btn-remove-image');
+
+if (btnUpload) {
+    btnUpload.addEventListener('click', () => {
+        coachFile.click();
+    });
+}
+
+if (coachFile) {
+    coachFile.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        selectedImageType = file.type;
+        imagePreviewName.innerText = file.name;
+        
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            selectedImageBase64 = event.target.result.split(',')[1];
+            imagePreview.src = event.target.result;
+            imagePreviewContainer.style.display = 'flex';
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+if (btnRemoveImage) {
+    btnRemoveImage.addEventListener('click', () => {
+        clearSelectedImage();
+    });
+}
+
+function clearSelectedImage() {
+    selectedImageBase64 = null;
+    selectedImageType = null;
+    if (coachFile) coachFile.value = '';
+    if (imagePreview) imagePreview.src = '';
+    if (imagePreviewContainer) imagePreviewContainer.style.display = 'none';
+}
+
 // AI Coach Chat
 const coachForm = document.getElementById('coach-form');
 const coachInput = document.getElementById('coach-input');
@@ -449,12 +573,14 @@ coachForm.addEventListener('submit', async (e) => {
     
     if (!apiKeyStr) {
         appendMessage("Hiba: Kérlek add meg a Gemini API kulcsodat a Beállítások fülön (fogaskerék ikon felül)!", 'ai');
+        clearSelectedImage();
         return;
     }
     
     const apiKeys = apiKeyStr.split(',').map(k => k.trim()).filter(Boolean);
     if (apiKeys.length === 0) {
         appendMessage("Hiba: Nem található érvényes API kulcs. Ellenőrizd a Beállításokat!", 'ai');
+        clearSelectedImage();
         return;
     }
     
@@ -471,12 +597,28 @@ coachForm.addEventListener('submit', async (e) => {
     const systemInstruction = `Te egy profi dietetikus és Health Coach vagy. 
 Az alábbi adatok a felhasználó táplálkozási pontszámai és étrend változatossági mutatói:
 ${JSON.stringify(contextData, null, 2)}
+
+Ha a felhasználó képet küld ételről/italról, vagy szövegesen kér összehasonlítást, elemezd az ételeket. Döntsd el a MIND diéta pontozási súlyai alapján, hogy melyik az egészségesebb, és magyarázd el miért egyszerűen, pontokba szedve.
+A MIND diéta szabályai: leveles zöldségek, zöldségek, bogyós gyümölcsök, magvak, teljes kiőrlésű gabonák, halak, szárnyasok és olívaolaj magas pozitív súlyúak. Vörös húsok, vaj, sajt, édességek, gyorsételek és olajban sültek erősen negatív (büntető) súlyúak.
+
 Kérlek, válaszolj a felhasználó kérdésére ezen adatok ismeretében, barátságos, motiváló, letisztult stílusban. Ne légy túl bőbeszédű. Válaszolj magyarul.`;
 
     appendMessage("AI Coach gondolkodik...", 'ai-loading');
 
     let responseText = null;
     let lastError = null;
+
+    // Összeállítjuk a multimodális tartalmat a Gemini API-nak
+    const parts = [{ text: msg }];
+    if (selectedImageBase64) {
+        parts.push({
+            inlineData: {
+                mimeType: selectedImageType,
+                data: selectedImageBase64
+            }
+        });
+        clearSelectedImage(); // töröljük a kijelölést küldés után
+    }
 
     // API Kulcsok rotációja
     for (const key of apiKeys) {
@@ -489,7 +631,7 @@ Kérlek, válaszolj a felhasználó kérdésére ezen adatok ismeretében, bará
                 },
                 body: JSON.stringify({
                     contents: [{
-                        parts: [{ text: msg }]
+                        parts: parts
                     }],
                     systemInstruction: {
                         parts: [{ text: systemInstruction }]
@@ -591,12 +733,212 @@ document.getElementById('settings-form').addEventListener('submit', (e) => {
     }, 3000);
 });
 
+// Saját Ételek AI Elemzés és Hozzáadás
+const customMealForm = document.getElementById('custom-meal-form');
+if (customMealForm) {
+    customMealForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const mealName = document.getElementById('custom-meal-name').value.trim();
+        if (!mealName) return;
+        
+        const apiKeyStr = localStorage.getItem('gemini_api_keys') || '';
+        const model = localStorage.getItem('gemini_model') || 'gemini-1.5-flash';
+        
+        if (!apiKeyStr) {
+            alert("Kérlek add meg a Gemini API kulcsodat a Beállítások fülön (fogaskerék ikon jobb felül)!");
+            return;
+        }
+        
+        const apiKeys = apiKeyStr.split(',').map(k => k.trim()).filter(Boolean);
+        if (apiKeys.length === 0) {
+            alert("Nincs érvényes API kulcs megadva!");
+            return;
+        }
+        
+        const statusDiv = document.getElementById('custom-meal-status');
+        const statusText = document.getElementById('custom-meal-status-text');
+        const submitBtn = document.getElementById('btn-custom-meal-submit');
+        
+        statusDiv.style.display = 'block';
+        statusText.innerText = `Az AI épp elemzi a(z) "${mealName}" összetevőit... Ez eltarthat 5-10 másodpercig.`;
+        submitBtn.disabled = true;
+        
+        const prompt = `A felhasználó szeretné hozzáadni a következő egyedi ételt: "${mealName}".
+Kérlek, elemezd az ételt, és határozd meg, hogy 100 grammjában a következő 145 alapanyag közül melyek szerepelnek, és milyen arányban (grammban, az összegük legfeljebb 100 legyen).
+
+Elérhető alapanyagok listája:
+${JSON.stringify(foodDatabase.map(f => f.name))}
+
+A választ szigorúan és kizárólag érvényes JSON formátumban add meg, mindenféle markdown formázás (pl. \`\`\`json) vagy magyarázó szöveg nélkül! A JSON Struktúra pontosan ez legyen:
+{
+  "category": "Zöld leveles zöldségek vagy Egyéb zöldségek vagy Bogyós gyümölcsök vagy Egyéb gyümölcsök vagy Hüvelyesek és Szója vagy Diófélék és magvak vagy Halak és Húsok vagy Tejtermékek vagy Gabonafélék vagy Olajok és Zsírok vagy Bolti Készételek és Alternatívák vagy Édességek és Nassok vagy Ízesítők és Szószok vagy Italok vagy Sütés és Kamra vagy Kiegészítők és Extrák",
+  "ingredients": [
+    { "name": "alapanyag_neve_a_listabol", "amount": gramm_mennyiseg_100g_ban }
+  ]
+}`;
+
+        let responseText = null;
+        let lastError = null;
+        
+        for (const key of apiKeys) {
+            try {
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`;
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }]
+                    })
+                });
+                
+                if (!response.ok) {
+                    const errData = await response.json();
+                    throw new Error(errData.error?.message || `HTTP ${response.status}`);
+                }
+                
+                const data = await response.json();
+                responseText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                if (responseText) break;
+            } catch (err) {
+                console.warn("Hiba az AI elemzésnél kulccsal:", err);
+                lastError = err;
+            }
+        }
+        
+        submitBtn.disabled = false;
+        
+        if (!responseText) {
+            statusText.innerText = "Hiba történt az AI elemzés során: " + (lastError?.message || "Ismeretlen hiba");
+            statusDiv.style.background = 'rgba(239, 68, 68, 0.1)';
+            statusDiv.style.borderLeft = '4px solid var(--danger)';
+            return;
+        }
+        
+        try {
+            let cleanText = responseText.trim();
+            if (cleanText.startsWith("```")) {
+                cleanText = cleanText.replace(/^```json\s*/i, "").replace(/```$/, "").trim();
+            }
+            
+            const parsed = JSON.parse(cleanText);
+            
+            // Súly és pontszám kiszámítása
+            let totalWeight = 0;
+            let totalAmount = 0;
+            
+            parsed.ingredients.forEach(ing => {
+                const dbItem = foodDatabase.find(f => f.name.toLowerCase() === ing.name.toLowerCase());
+                if (dbItem) {
+                    totalWeight += (ing.amount * dbItem.weight);
+                    totalAmount += ing.amount;
+                }
+            });
+            
+            const avgWeight = totalAmount > 0 ? (totalWeight / totalAmount) : 0;
+            
+            // P = 100 / (1 + e^(-0.05 * 100 * avgWeight))
+            const S = 100 * avgWeight;
+            const P = Math.round(100 / (1 + Math.exp(-0.05 * S)));
+            
+            const newCustomFood = {
+                name: mealName,
+                weight: avgWeight,
+                score: P,
+                category: parsed.category || 'Bolti Készételek és Alternatívák',
+                ingredients: parsed.ingredients,
+                isCustom: true
+            };
+            
+            customFoods.push(newCustomFood);
+            localStorage.setItem('health_custom_foods', JSON.stringify(customFoods));
+            
+            document.getElementById('custom-meal-name').value = '';
+            statusDiv.style.display = 'none';
+            
+            renderCustomMeals();
+            populateDatalist();
+            
+        } catch (parseErr) {
+            console.error("Hiba az AI válasz beolvasásakor:", parseErr, responseText);
+            statusText.innerText = "Hiba: Az AI válasza nem érvényes JSON formátumú. Próbáld újra!";
+            statusDiv.style.background = 'rgba(239, 68, 68, 0.1)';
+            statusDiv.style.borderLeft = '4px solid var(--danger)';
+        }
+    });
+}
+
+// Keresés eseménykezelője a saját ételeknél
+const customMealSearch = document.getElementById('custom-meal-search');
+if (customMealSearch) {
+    customMealSearch.addEventListener('input', () => {
+        renderCustomMeals();
+    });
+}
+
+// Saját ételek listázása
+function renderCustomMeals() {
+    const list = document.getElementById('custom-meal-list');
+    if (!list) return;
+    list.innerHTML = '';
+    
+    const searchVal = document.getElementById('custom-meal-search').value.toLowerCase();
+    const filtered = customFoods.filter(f => f.name.toLowerCase().includes(searchVal));
+    
+    if (filtered.length === 0) {
+        list.innerHTML = '<p style="text-align: center; color: var(--text-secondary); margin-top: 1rem;">Nincs a keresésnek megfelelő saját étel.</p>';
+        return;
+    }
+    
+    filtered.forEach(food => {
+        const li = document.createElement('li');
+        li.style.padding = '1.2rem';
+        li.style.background = 'rgba(255,255,255,0.02)';
+        li.style.border = '1px solid rgba(255,255,255,0.05)';
+        li.style.borderRadius = '12px';
+        li.style.display = 'flex';
+        li.style.flexDirection = 'column';
+        li.style.gap = '0.75rem';
+        
+        const ingNames = food.ingredients.map(i => `${i.name} (${i.amount}g)`).join(', ');
+        
+        li.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <strong style="font-size: 1.1rem; color: var(--text-primary);">${food.name}</strong><br>
+                    <small style="color: var(--text-secondary)">${food.category}</small>
+                </div>
+                <div style="text-align: right;">
+                    <span style="font-size: 1.5rem; font-weight: bold; color: var(--accent-primary);">${food.score}</span>
+                    <p style="font-size: 0.7rem; color: var(--text-secondary); margin: 0; text-transform: uppercase;">súlyozott pont</p>
+                </div>
+            </div>
+            <div style="font-size: 0.85rem; color: var(--text-secondary); padding-top: 0.5rem; border-top: 1px solid rgba(255,255,255,0.05);">
+                <strong>Összetevők (100g-ban):</strong> ${ingNames}
+            </div>
+            <button onclick="deleteCustomMeal('${food.name.replace(/'/g, "\\'")}')" style="align-self: flex-end; background: none; border: none; color: var(--danger); font-size: 0.85rem; cursor: pointer; padding: 4px; opacity: 0.8; transition: opacity 0.2s;">Törlés</button>
+        `;
+        list.appendChild(li);
+    });
+}
+
+window.deleteCustomMeal = function(name) {
+    customFoods = customFoods.filter(f => f.name !== name);
+    localStorage.setItem('health_custom_foods', JSON.stringify(customFoods));
+    renderCustomMeals();
+    populateDatalist();
+};
+
 // Inicializálás
 fetchDatabase().then(() => {
+    const logDateInput = document.getElementById('log-date');
+    if (logDateInput) {
+        logDateInput.valueAsDate = new Date();
+    }
     renderLogs();
     calculateScore();
     calculateDiversity();
     syncWithServer();
+    renderCustomMeals();
 });
 
 // Service Worker regisztráció PWA-hoz
