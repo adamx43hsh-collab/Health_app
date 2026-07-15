@@ -175,3 +175,44 @@ input:focus {
   letter-spacing: 0.05em;
 }
 
+/* Mobile Responsiveness */
+@media (max-width: 600px) {
+  .nav-text {
+    display: none;
+  }
+  .nav-item {
+    font-size: 0;
+  }
+  .nav-item svg {
+    margin-bottom: 0;
+  }
+  .main-content {
+    padding: 1rem 0.5rem 80px 0.5rem;
+  }
+  
+  /* Formok es Grid-ek egymas ala rendezese mobilon */
+  #log-form > div:nth-child(2) {
+    grid-template-columns: 1fr !important;
+  }
+  
+  #tab-dashboard > div:nth-child(2) {
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)) !important;
+  }
+  
+  #tab-diversity > div:nth-child(2) {
+    grid-template-columns: 1fr !important;
+  }
+  
+  #tab-stats > div:nth-child(3) {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* Beallitas gomb kisebb felso margoval es igazitassal */
+  header h1 {
+    font-size: 1.5rem;
+  }
+  header p {
+    font-size: 0.8rem;
+  }
+}
+

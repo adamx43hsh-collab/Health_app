@@ -715,8 +715,77 @@ document.getElementById('btn-settings').addEventListener('click', () => {
     settingsTab.classList.add('animate-fade-in');
     
     document.getElementById('settings-api-key').value = localStorage.getItem('gemini_api_keys') || '';
-    document.getElementById('settings-model').value = localStorage.getItem('gemini_model') || 'gemini-1.5-flash';
+    const savedModel = localStorage.getItem('gemini_model') || '';
+    
+    // Automatikus letöltés ha már van mentett kulcs
+    if (localStorage.getItem('gemini_api_keys')) {
+        fetchModels(savedModel);
+    } else {
+        document.getElementById('settings-model').innerHTML = '<option value="">Adj meg egy kulcsot a modellek betöltéséhez!</option>';
+    }
 });
+
+async function fetchModels(selectedModel = '') {
+    const apiKeyStr = document.getElementById('settings-api-key').value.trim();
+    const select = document.getElementById('settings-model');
+    const btn = document.getElementById('btn-fetch-models');
+    
+    if (!apiKeyStr) {
+        alert("Kérlek add meg a Gemini API kulcsodat először!");
+        return;
+    }
+    
+    const apiKeys = apiKeyStr.split(',').map(k => k.trim()).filter(Boolean);
+    const key = apiKeys[0];
+    
+    if (btn) {
+        btn.innerText = "Betöltés...";
+        btn.disabled = true;
+    }
+    select.innerHTML = '<option value="">Modellek lekérése...</option>';
+    
+    try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${key}`);
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+        
+        const data = await response.json();
+        const validModels = data.models.filter(m => 
+            m.supportedGenerationMethods && 
+            m.supportedGenerationMethods.includes('generateContent') &&
+            m.name.includes('gemini')
+        );
+        
+        select.innerHTML = '';
+        validModels.forEach(m => {
+            const val = m.name.replace('models/', '');
+            const option = document.createElement('option');
+            option.value = val;
+            option.innerText = m.displayName ? `${m.displayName} (${val})` : val;
+            if (val === selectedModel) option.selected = true;
+            select.appendChild(option);
+        });
+        
+        if (validModels.length > 0 && !selectedModel) {
+            select.options[0].selected = true;
+        }
+        
+    } catch (err) {
+        console.error("Modell lista betöltése sikertelen:", err);
+        select.innerHTML = '<option value="">Hiba a betöltésnél. Ellenőrizd a kulcsot!</option>';
+    } finally {
+        if (btn) {
+            btn.innerText = "Modellek betöltése";
+            btn.disabled = false;
+        }
+    }
+}
+
+const btnFetchModels = document.getElementById('btn-fetch-models');
+if (btnFetchModels) {
+    btnFetchModels.addEventListener('click', () => fetchModels());
+}
 
 document.getElementById('settings-form').addEventListener('submit', (e) => {
     e.preventDefault();
@@ -724,7 +793,9 @@ document.getElementById('settings-form').addEventListener('submit', (e) => {
     const model = document.getElementById('settings-model').value;
     
     localStorage.setItem('gemini_api_keys', apiKey);
-    localStorage.setItem('gemini_model', model);
+    if (model) {
+        localStorage.setItem('gemini_model', model);
+    }
     
     const status = document.getElementById('settings-status');
     status.style.display = 'block';
