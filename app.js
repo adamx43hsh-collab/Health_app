@@ -1044,6 +1044,18 @@ function initApp() {
 
 initApp();
 
-// Service Worker regisztráció kikapcsolva (nem kompatibilis WebView-val)
-// Az Android appban a file:// protokoll nem támogatja a Service Worker-t,
-// és a fetch interceptor blokkolja az API hívásokat.
+// WebView Cache ürítése és régi Service Worker eltávolítása
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        for(let registration of registrations) {
+            registration.unregister();
+            console.log('Régi Service Worker eltávolítva.');
+        }
+    });
+}
+if ('caches' in window) {
+    caches.keys().then(function(names) {
+        for (let name of names)
+            caches.delete(name);
+    });
+}
